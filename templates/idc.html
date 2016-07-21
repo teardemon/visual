@@ -1,0 +1,114 @@
+<title>{{ period }}流量峰值统计</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+<script type="text/javascript" src=/static/public/js/echarts/2.2.7/build/dist/echarts.js charset="utf-8"></script>
+<script type="text/javascript" src=/static/idc/js/drawEcharts.js charset="utf-8"></script>
+<script type="text/javascript" src=/static/idc/js/drawEcharts.js charset="utf-8"></script>
+<script type="text/javascript" src=/static/idc/js/json2.js charset="utf-8"></script>
+<script type="text/javascript" src=/static/public/js/jquery.js charset="utf-8"></script>
+<link href="/static/public/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<script src="/static/public/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<style type="text/css">
+    body {
+        background-color: #ccffcc
+    }
+
+    /*改变最大长宽，未达到最大长宽的时候是自适应的*/
+    #myModal .modal-body {
+        max-height: 800px;
+    }
+
+    /*这个css所使用的class是自定义的！*/
+    .custom-width {
+        width: 639px; /* either % (e.g. 60%) or px (400px) */
+    }
+</style>
+<SCRIPT LANGUAGE="JavaScript">
+    //document.write('{{json_data}}');
+    $(document).ready(function main() {
+        var a = '{{json_data}}';
+        var huanyuan = unescape(a.replace(/\\/g, '%').replace(/&quot;/g, '"'));
+        var jsonData = JSON.parse(huanyuan);
+        //serverRoom:机房(以省份命名)
+        //serverLine:机房的线路
+        var sum_serverLine_used = 0;
+        var sum_serverLine_total = 0;
+        for (var serverRoom  in jsonData) {
+            //alert
+            var serverLine = '';
+            for (serverLine in jsonData[serverRoom]) {
+                var serverLine_used = jsonData[serverRoom][serverLine]["used"];
+                var serverLine_total = jsonData[serverRoom][serverLine]["total"];
+                //var sRrdFile = jsonData[serverRoom][serverLine]["rrdfile"];
+                var sGraphId = jsonData[serverRoom][serverLine]["graph_id"];
+                //alert(idc_used)
+                tagAdd(serverLine, sGraphId);
+                drawChart(serverLine, serverLine_used, serverLine_total);
+
+                //用于统计并绘制机房总值统计
+                if (serverLine_used > serverLine_total) {
+                    serverLine_used = serverLine_total;
+                }
+                sum_serverLine_used += serverLine_used;
+                sum_serverLine_total += serverLine_total;
+            }
+            //$("#chart").append('<div style="clear:both"><div><hr>');
+        }
+        tagAdd('机房总值统计', null);
+        drawChart('机房总值统计', parseFloat(sum_serverLine_used.toFixed(0)), parseFloat(sum_serverLine_total.toFixed(0)))
+    });
+    function tagAdd(serverLine, sGraphId) {
+        var div_new = '<button name=' + sGraphId + ' data-toggle="modal" data-target="#myModal"><div id="' + serverLine + '" style="width:300px;height:300px;float:left"></div></button>';
+        $("#chart").append(div_new);
+    }
+</script>
+
+<script>
+    $('#myModal').on('show.bs.modal', function () {
+        // 执行一些动作...
+
+    })
+</script>
+
+<body>
+<div id="chart"></div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog custom-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">img标签将取代这里</div>
+        </div>
+        <!-- /.modal-content 用来把 <div> 的内容识别为模态框。-->
+    </div>
+    <!-- /.modal -->
+</div>
+</body>
+<script>
+    $('#myModal').on('show.bs.modal', function () {
+                //获得当前聚焦的button的name
+                var sGraphId = $(":focus").attr('name');
+                console.log(sGraphId);
+                ImgTag1 = '<center><strong><h3>1 day</h3></center></strong><img src="http://192.168.165.200/cacti/graph_image.php?action=view&local_graph_id=' + sGraphId + '&rra_id=1"></img>';
+                console.log(ImgTag1);
+                ImgTag2 = '<center><strong><h3>7 days</h3></center></strong><img src="http://192.168.165.200/cacti/graph_image.php?action=view&local_graph_id=' + sGraphId + '&rra_id=2"></img>';
+                $(".modal-body").html(ImgTag1 + ImgTag2);
+            }
+    );
+</script>
+<script language="JavaScript">
+    var iInterval = 30000;
+    function Refresh() {
+        var BoolShow = $('#myModal').is(':visible');
+        if (!BoolShow) {
+            window.location.reload();
+        } else {
+            setTimeout('Refresh()', iInterval)
+        }
+    }
+    setTimeout('Refresh()', iInterval); //指定1秒刷新一次
+</script>
