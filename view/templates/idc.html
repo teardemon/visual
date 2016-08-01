@@ -1,0 +1,34 @@
+<!--
+html5 的简化版本
+-->
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    {% block styles %}
+    {% endblock styles %}
+</head>
+
+<body>
+    <!--
+    头部
+    -->
+    <header>
+        {% block nav %}
+        {% endblock nav %}
+    </header>
+
+    <div>
+        {% block content %}
+        {% endblock content %}
+    </div>
+
+    <footer>
+        {% block footer %}
+        {% endblock footer %}
+    </footer>
+
+    {% block script %}
+    {% endblock script %}
+</body>
+</html>
