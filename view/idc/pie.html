@@ -1,0 +1,56 @@
+{% extends "templates/idc.html" %}
+
+
+{% block script %}
+    <script src="/static/public/echarts/3.1.10/echarts.js"></script>
+    <script src="/static/idc/js/echarts-pie.js"></script>
+    <script src="/static/public/jquery/3.0.0/jquery.min.js"></script>
+    <script>
+        {#    如果没有dom则添加#}
+        function tagAdd(sLine) {
+            objectDom = document.getElementById(sLine);
+            if (!objectDom) {
+                var div_new = '<div id="' + sLine + '" class="yzs-pie"></div>';
+                $("#drawChart-area").append(div_new);
+            }
+        }
+        // 异步加载数据
+        function AjaxDraw() {
+            //done在请求成功后执行
+            $.get('/static/idc/cache/pie.json').done(function (jEchartData) {
+                {#                jEchartData = JSON.parse(sEchartData);//如果后端在输出到文本的时候没有转为json格式则需要在前段转换，不可重复转#}
+                for (sServer in jEchartData) {
+                    for (sLine in jEchartData[sServer]) {
+                        tagAdd(sLine);
+                        drawChart(jEchartData[sServer][sLine], sLine, 2);
+                    }
+                }
+            });
+        }
+        AjaxDraw();
+        window.setInterval(AjaxDraw, 30000);
+    </script>
+{% endblock script %}
+
+{% block styles %}
+    <style type="text/css">
+        body {
+            background-color: #ccffcc
+        }
+
+        .yzs-pie {
+            width: 310px;
+            height: 310px;
+            float: left;
+        {#            overflow: visible;/*内容不会被修剪，会呈现在元素框之外。*/#}
+        }
+    </style>
+{% endblock styles %}
+
+
+{% block content %}
+    <!--在改区域中添加元素-->
+    <div id='drawChart-area'>
+    </div>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+{% endblock content %}
