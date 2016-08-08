@@ -5,72 +5,37 @@
     <script src="/static/public/echarts/3.1.10/echarts.js"></script>
     <script src="/static/idc/js/echarts-pie.js"></script>
     <script src="/static/public/jquery/3.0.0/jquery.min.js"></script>
-    <script>
-        {#    如果没有dom则添加#}
-        function tagAdd(sLine) {
-            objectDom = document.getElementById(sLine);
-            if (!objectDom) {
-                var div_new = '<div id="' + sLine + '" class="yzs-pie"></div>';
-                $("#drawChart-area").append(div_new);
-            }
-        }
-
-        function ShowTime(sDate) {
-            var sTip = '数据生成于：' + sDate;
-            $("#yzs-update-time").html(sTip);
-        }
-        // 异步加载数据
-        function AjaxDraw() {
-            //done在请求成功后执行
-            $.get('/static/idc/cache/pie.json').done(function (jData) {
-                {#                jEchartData = JSON.parse(sEchartData);//如果后端在输出到文本的时候没有转为json格式则需要在前段转换，不可重复转#}
-                jEchartData = jData['data'];
-                sDate = jData['date'];
-                console.log(sDate);
-                ShowTime(sDate);
-                for (sServer in jEchartData) {
-                    for (sLine in jEchartData[sServer]) {
-                        tagAdd(sLine);
-                        drawChart(jEchartData[sServer][sLine], sLine, 2);
-                    }
-                }
-            });
-        }
-        AjaxDraw();
-        window.setInterval(AjaxDraw, 30000);
-    </script>
+    <!--右下角的工具栏-->
+    <script type="text/javascript" src="/static/public/materialize/js/materialize.min.js"></script>
+    <script src="/static/idc/js/idc.js"></script>
 {% endblock script %}
 
+
 {% block styles %}
-    <style type="text/css">
-        body {
-            background-color: #ccffcc
-        }
-
-        .yzs-pie {
-            width: 310px;
-            height: 310px;
-            float: left;
-        {#            overflow: visible;/*内容不会被修剪，会呈现在元素框之外。*/#}
-        }
-
-        #yzs-update-time {
-            position: fixed;
-            right: 23px;
-            bottom: 23px;
-            font-size: 25px;
-            color: #271b38; /*字体的颜色*/
-            z-index: 998
-        }
-    </style>
+    <!--右下角的工具栏-->
+    <link type="text/css" rel="stylesheet" href="/static/public/materialize/css/materialize.min.css"
+          media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="/static/idc/css/idc.css">
 {% endblock styles %}
 
 
 {% block content %}
+    <!--右下角工具栏-->
+    <div class="fixed-action-btn" style="bottom: 65px; right: 24px;">
+        <a class="btn-floating btn-large red">
+            <i class="large material-icons">mode_edit</i>
+        </a>
+        <ul>
+            <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+            <li><a class="btn-floating green" id="yzs-data-button"><i class="material-icons">pause</i></a></li>
+            <!--
+            <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+            <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+            -->
+        </ul>
+    </div>
     <!--在改区域中添加元素-->
-    <strong>
-        <div id="yzs-update-time"></div>
-    </strong>
+    <div id="yzs-update-time"></div>
     <div id='drawChart-area'></div>
     <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
 {% endblock content %}

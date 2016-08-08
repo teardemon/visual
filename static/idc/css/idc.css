@@ -1,0 +1,46 @@
+body {
+    background-color: #ccffcc
+}
+
+.yzs-pie {
+    width: 310px;
+    height: 310px;
+    float: left;
+}
+
+#yzs-update-time {
+    position: fixed;
+    right: 23px;
+    bottom: 23px;
+    font-size: 25px;
+    font-weight: 600;
+    color: #271b38; /*字体的颜色*/
+    z-index: 998
+}
+
+/*http://fonts.googleapis.com/icon?family=Material+Icons*/
+/* fallback */
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'), local('MaterialIcons-Regular'), url(/static/idc/font/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -moz-font-feature-settings: 'liga';
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
