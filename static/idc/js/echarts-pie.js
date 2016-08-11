@@ -36,14 +36,8 @@ function Format(jDataValue) {
 
 // 内环总为深色，外网第一个总和内环同色，其后为第一个同色系的浅色
 
-function drawChart(jDateValue, sTagID, Theme) {
-    objectDom = document.getElementById(sTagID);
-    if (objectDom) {
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(objectDom);
-    } else {
-        alert('dom还没有加载！');
-    }
+function GetOption(jDateValue, sTagID, Theme) {
+
     aFormated = Format(jDateValue);
     //sColorInner = GetColorInner(JDateValue);
 
@@ -71,15 +65,15 @@ function drawChart(jDateValue, sTagID, Theme) {
     //这个渐变也很花'#CC3333', '#DD6D22', '#EE9611', '#D5B32B', '#FFCC00', '#EEEE11', '#6DDD22', '#B8DD22', '#C2EE11', '#CCFF00'
     else if (Theme == 2) {
         if (iRate > 0.9) {
-            var aOptionColor = ['#FF0000', '#999999', '#005c99', '#0091f2', '#19a3ff', '#4db8ff', '#66c2ff', '#80ccff', '#99d6ff', '#b3e0ff', '#ccebff', '#e6f5ff','#e6f5ff']; //'#FF0000' red
+            var aOptionColor = ['#FF0000', '#999999', '#005c99', '#0091f2', '#19a3ff', '#4db8ff', '#66c2ff', '#80ccff', '#99d6ff', '#b3e0ff', '#ccebff', '#e6f5ff', '#e6f5ff']; //'#FF0000' red
             var bItemStyleShow = true;
         }
         else if (iRate > 0.7) {
-            var aOptionColor = ['#FF8C00', '#999999', '#005c99', '#0091f2', '#19a3ff', '#4db8ff', '#66c2ff', '#80ccff', '#99d6ff', '#b3e0ff', '#ccebff', '#e6f5ff','#e6f5ff']; //'#FF8C00'chengse
+            var aOptionColor = ['#FF8C00', '#999999', '#005c99', '#0091f2', '#19a3ff', '#4db8ff', '#66c2ff', '#80ccff', '#99d6ff', '#b3e0ff', '#ccebff', '#e6f5ff', '#e6f5ff']; //'#FF8C00'chengse
             var bItemStyleShow = false;
         }
         else {
-            var aOptionColor = ['#32cd32', '#999999', '#005c99', '#0091f2', '#19a3ff', '#4db8ff', '#66c2ff', '#80ccff', '#99d6ff', '#b3e0ff', '#ccebff', '#e6f5ff','#e6f5ff']; //'#32cd32' green
+            var aOptionColor = ['#32cd32', '#999999', '#005c99', '#0091f2', '#19a3ff', '#4db8ff', '#66c2ff', '#80ccff', '#99d6ff', '#b3e0ff', '#ccebff', '#e6f5ff', '#e6f5ff']; //'#32cd32' green
             var bItemStyleShow = false;
         }
     }
@@ -99,7 +93,7 @@ function drawChart(jDateValue, sTagID, Theme) {
     }
 
 
-    var option = {
+    var jOption = {
         //颜色按顺时针顺序，由内环到外环取。顺序：已用-未用
         color: aOptionColor,
         tooltip: {//提示框，当聚焦后显示
@@ -117,6 +111,7 @@ function drawChart(jDateValue, sTagID, Theme) {
                 fontSize: 32
             }
         },
+        // animation: false, 关闭动画效果，关闭对页面奔溃的改善不大
         /* 工具栏
          * legend: {
          orient: 'vertical',
@@ -172,6 +167,22 @@ function drawChart(jDateValue, sTagID, Theme) {
             }
         ]
     };
+    return jOption
+}
+
+function SetOption(jOption, sTagID) {
+    objectDom = document.getElementById(sTagID);
+    if (objectDom) {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(objectDom);
+    } else {
+        alert('dom还没有加载！');
+    }
     // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
+    myChart.setOption(jOption);
+}
+
+function drawChart(jDateValue, sTagID, Theme) {
+    jOption = GetOption(jDateValue, sTagID, Theme);
+    SetOption(jOption, sTagID);
 }

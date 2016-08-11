@@ -30,24 +30,28 @@ function AjaxDraw() {
         return
     }
 
-    //done在请求成功后执行
-    $.get('/static/idc/cache/pie.json').done(function (jData) {
-        //jEchartData = JSON.parse(sEchartData);//如果后端在输出到文本的时候没有转为json格式则需要在前段转换，不可重复转
-        jEchartData = jData['data'];
-        sDate = jData['date'];
-        console.log(sDate);
-        ShowTime(sDate);
-        for (sServer in jEchartData) {
-            for (sLine in jEchartData[sServer]) {
-                tagAdd(sLine);
-                drawChart(jEchartData[sServer][sLine], sLine, 2);
+    //$.get('/static/idc/cache/pie.json').done(function (jData) {  //done在请求成功后执行
+    $.ajax({
+        url: '/static/idc/cache/pie.json',
+        type: 'GET',
+        cache: false,//$.get()方法在url地址固定时，会缓存返回结果，导致不可预料的问题。但在火狐下，则不会缓存。
+        success: function (jData) {
+            //jEchartData = JSON.parse(sEchartData);//如果后端在输出到文本的时候没有转为json格式则需要在前段转换，不可重复转
+            jEchartData = jData['data'];
+            sDate = jData['date'];
+            ShowTime(sDate);
+            for (sServer in jEchartData) {
+                for (sLine in jEchartData[sServer]) {
+                    tagAdd(sLine);
+                    drawChart(jEchartData[sServer][sLine], sLine, 2);
+                }
             }
         }
     });
 }
 
 AjaxDraw();
-window.setInterval(AjaxDraw, 30000);
+window.setInterval(AjaxDraw, 1000);
 
 //<li><a class="btn-floating red" id="yzs-data-button"><i class="material-icons">pause</i></a></li>
 $("#yzs-data-button").on('click', function () {
