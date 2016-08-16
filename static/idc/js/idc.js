@@ -51,7 +51,7 @@ function AjaxDraw() {
 }
 
 AjaxDraw();
-window.setInterval(AjaxDraw, 1000);
+// window.setInterval(AjaxDraw, 30000);
 
 //<li><a class="btn-floating red" id="yzs-data-button"><i class="material-icons">pause</i></a></li>
 $("#yzs-data-button").on('click', function () {
