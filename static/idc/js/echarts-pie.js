@@ -121,6 +121,7 @@ function GetOption(jDateValue, sTagID, Theme) {
          * */
         series: [
             {//内环的样式
+                name: jDateValue.outer_name,
                 center: ['50%', '63%'],//图形的中心坐标，默认['50%'，‘50%’]
                 type: 'pie',
                 radius: [0, '60%'], //内环的大小，内径为0则为圆
@@ -142,6 +143,7 @@ function GetOption(jDateValue, sTagID, Theme) {
                 }
             },
             {//外环的样式
+                name: '外环为Top流量',
                 center: ['50%', '63%'],//图形的中心坐标，默认['50%'，‘50%’]
                 type: 'pie',
                 radius: ['67%', '74%'],//外环的内径和外径
@@ -180,9 +182,23 @@ function SetOption(jOption, sTagID) {
     }
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(jOption);
+    return myChart
+}
+
+function SetEvent(oChart) {
+    if (!oChart) {
+        return
+    }
+    oChart.on('click', function (param) {
+        //     用于弹出 数据
+        console.log(param.seriesName);
+        //name 用于弹出 数据
+        console.log(param.name);
+    })
 }
 
 function drawChart(jDateValue, sTagID, Theme) {
     jOption = GetOption(jDateValue, sTagID, Theme);
-    SetOption(jOption, sTagID);
+    oChart = SetOption(jOption, sTagID);
+    SetEvent(oChart)
 }
