@@ -2,42 +2,73 @@
 
 
 {% block script %}
+    <script src="/static/public/jquery/jquery.js"></script>
+    <!--模拟框-->
+    <script src="/static/public/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="/static/public/echarts/3.1.10/echarts.js"></script>
     <script src="/static/idc/js/echarts-pie.js"></script>
-    <script src="/static/public/jquery/3.0.0/jquery.min.js"></script>
     <!--右下角的工具栏-->
-    <script type="text/javascript" src="/static/public/materialize/js/materialize.min.js"></script>
     <script src="/static/idc/js/idc.js"></script>
     <script>
         {% if not on_hook %}
             window.setInterval(AjaxDraw, 30000);
         {% endif %}
     </script>
+    <style type="text/css">
+
+        /*改变最大长宽，未达到最大长宽的时候是自适应的*/
+        #myModal .modal-body {
+            max-height: 840px;
+        }
+
+        /*这个css所使用的class是自定义的！*/
+        .custom-width {
+            width: 850px; /* either % (e.g. 60%) or px (400px) */
+        }
+
+        h3 {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .yzs-modal-header {
+            margin: 0px;
+            padding: 0px;
+            height: 30px;
+        }
+
+        .yzs-button {
+            float: right;
+            width: 50px;
+        }
+
+    </style>
 {% endblock script %}
 
 
 {% block styles %}
+    <title>idc各线路流量</title>
+    <link type="text/css" rel="stylesheet" href="/static/public/bootstrap/3.3.5/css/bootstrap.min.css"/>
     <!--右下角的工具栏-->
-    <link type="text/css" rel="stylesheet" href="/static/public/materialize/css/materialize.min.css"
-          media="screen,projection"/>
-    <link type="text/css" rel="stylesheet" href="/static/idc/css/idc.css">
+    <link type="text/css" rel="stylesheet" href="/static/idc/css/idc.css"/>
 {% endblock styles %}
 
 
 {% block content %}
-    <!--右下角工具栏-->
-    <div class="fixed-action-btn" style="bottom: 65px; right: 24px;">
-        <a class="btn-floating btn-large red">
-            <i class="material-icons green">work</i>
-        </a>
-        <ul>
-            {#            <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>#}
-            <li><a class="btn-floating green" id="yzs-data-button"><i class="material-icons">pause</i></a></li>
-            <!--
-            <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
-            <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
-            -->
-        </ul>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog custom-width">
+            <div class="modal-content">
+                <div class="modal-header yzs-modal-header">
+                    <button class='yzs-button' type="button" data-dismiss="modal"
+                            aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">img标签将取代这里</div>
+            </div>
+            <!-- /.modal-content 用来把 <div> 的内容识别为模态框。-->
+        </div>
+        <!-- /.modal -->
     </div>
     <!--在改区域中添加元素-->
     <div id="yzs-update-time"></div>

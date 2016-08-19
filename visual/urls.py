@@ -21,5 +21,6 @@ from django.contrib import admin
 urlpatterns = patterns('',
                        url(r'^$', include('idc.urls')),
                        url(r'^idc/', include('idc.urls')),
+                       url(r'^zabbix/', include('zabbix.urls')),
                        url(r'^admin/', include(admin.site.urls)),
                        )

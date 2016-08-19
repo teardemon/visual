@@ -143,7 +143,7 @@ function GetOption(jDateValue, sTagID, Theme) {
                 }
             },
             {//外环的样式
-                name: '外环为Top流量',
+                name: '外环',
                 center: ['50%', '63%'],//图形的中心坐标，默认['50%'，‘50%’]
                 type: 'pie',
                 radius: ['67%', '74%'],//外环的内径和外径
@@ -185,20 +185,63 @@ function SetOption(jOption, sTagID) {
     return myChart
 }
 
+
+function GetImgTag(jData) {
+    if (!jData) {
+        return ''
+    }
+    jData = JSON.parse(jData);
+    sOneDay = '<center><strong><h3>1 day</h3></center></strong><img src="' + jData['1day'] + '"></img>';
+    sSevenDay = '<center><strong><h3>7 day</h3></center></strong><img src="' + jData['7day'] + '"></img>';
+    sTag = sOneDay + sSevenDay;
+    return sTag
+}
+
+function InsertModel(sTag) {
+    $(".modal-body").html(sTag);
+}
+
+function ShownModel() {
+    $("#myModal").modal('show');
+}
+
+function ZabbixChart(sZabbixIP) {
+    console.log(sZabbixIP);
+    $.ajax({
+        url: '/zabbix/chart/' + sZabbixIP,
+        type: 'GET',
+        success: function (jData) {
+            sTag = GetImgTag(jData);
+            InsertModel(sTag);
+            ShownModel();
+        }
+    });
+}
+
 function SetEvent(oChart) {
     if (!oChart) {
         return
     }
     oChart.on('click', function (param) {
-        //     用于弹出 数据
-        console.log(param.seriesName);
-        //name 用于弹出 数据
-        console.log(param.name);
+        if (param.name == 'other') {
+            //用户当前点击的是外环的'other',外环显示机房top10和other流量，other是不需要弹框显示的
+            return ''
+        }
+        // 用于弹出 数据
+        if (param.seriesName == '外环') {
+            //用户当前点击的是外环
+            var sZabbixIP = param.name
+        } else {
+            //用户当前点击的是内环
+            var sZabbixIP = param.seriesName
+        }
+        ZabbixChart(sZabbixIP)
     })
 }
+
 
 function drawChart(jDateValue, sTagID, Theme) {
     jOption = GetOption(jDateValue, sTagID, Theme);
     oChart = SetOption(jOption, sTagID);
-    SetEvent(oChart)
+    SetEvent(oChart);
 }
