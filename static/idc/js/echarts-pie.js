@@ -207,10 +207,12 @@ function ShownModel() {
     $("#myModal").modal('show');
 }
 
-function ZabbixChart(sZabbixIP) {
-    console.log(sZabbixIP);
+function ZabbixChart(sZabbixIP, sTagID) {
+    console.log(sZabbixIP, sTagID);
     $.ajax({
-        url: '/zabbix/chart/' + sZabbixIP,
+        // url: '/zabbix/chart/' + sZabbixIP,
+        url: '/zabbix/chart',
+        data: "ip=" + sZabbixIP + "&line=" + sTagID,// data: '{ip:' + sZabbixIP + ',line:' + sTagID + '}',
         type: 'GET',
         success: function (jData) {
             sTag = GetImgTag(jData);
@@ -220,7 +222,7 @@ function ZabbixChart(sZabbixIP) {
     });
 }
 
-function SetEvent(oChart) {
+function SetEvent(oChart, sTagID) {
     if (!oChart) {
         return
     }
@@ -237,13 +239,17 @@ function SetEvent(oChart) {
             //用户当前点击的是内环
             var sZabbixIP = param.seriesName
         }
-        ZabbixChart(sZabbixIP)
+        ZabbixChart(sZabbixIP, sTagID)
     })
 }
 
-
+/*
+ * jDataValue：用于画图的数据
+ * sTagID：画图的html标签的id
+ * Theme：绘图的样式编号
+ * */
 function drawChart(jDateValue, sTagID, Theme) {
     jOption = GetOption(jDateValue, sTagID, Theme);
     oChart = SetOption(jOption, sTagID);
-    SetEvent(oChart);
+    SetEvent(oChart, sTagID);
 }

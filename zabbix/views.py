@@ -29,6 +29,7 @@ class CZabbix(View, spider.CSpider):
             },
             'type': '',  # host or switch
             'ip': '',
+            'line': '',  # 线路，不同线路能使用一个交换机ip，所以单靠交换机ip无法区分线路
         }
 
     # 判断一个ip返回的信息是交换机所有的
@@ -54,8 +55,7 @@ class CZabbix(View, spider.CSpider):
         return ''
 
     def get_switch_chart_url(self, list_ret):
-        str_ip = self.m_dict_ret['ip']
-        str_interface = self.m_dict_map[str_ip]
+        str_interface = get_interface(self.m_dict_ret['ip'], self.m_dict_ret['line'])
         for dict_interface_url in list_ret:
             for str_full_interface, str_url in dict_interface_url.iteritems():
                 if str_interface in str_full_interface:
@@ -106,10 +106,9 @@ class CZabbix(View, spider.CSpider):
         return 0
 
     def get(self, request, *args, **kwargs):
-        if not self.is_enable_args_format(*args):
-            return HttpResponse()
-        str_ip = args[0]
-        self.m_dict_ret['ip'] = str_ip
+        if request.method == 'GET':  # and request.is_ajax():
+            self.m_dict_ret['ip'] = request.GET.get('ip')
+            self.m_dict_ret['line'] = request.GET.get('line')
         json_info = self.get_info()
         str_traffic_url_demo = self.get_chart_url(json_info)
         self.get_graph_id(str_traffic_url_demo)

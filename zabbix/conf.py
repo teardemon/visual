@@ -14,6 +14,21 @@ def get_switch_map():
     return dict_switch_map.copy()
 
 
+def get_interface(switch_ip, line):
+    '''
+    :param switch_ip: 交换机ip
+    :param line: 需要查询的交换机接口对应的线路
+    :return: 交换机接口的名称
+    '''
+    object_file = file('static/idc/cache/ip_to_interface.yaml')
+    dict_switch_map = yaml.load(object_file)
+    if not switch_ip in dict_switch_map:
+        return ''
+    if not line in dict_switch_map[switch_ip]:
+        return ''
+    return dict_switch_map[switch_ip][line]
+
+
 DICT_SWITCH_MAP = get_switch_map()
 
 if __name__ == '__main__':
