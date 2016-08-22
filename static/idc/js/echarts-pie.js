@@ -191,8 +191,10 @@ function GetImgTag(jData) {
         return ''
     }
     jData = JSON.parse(jData);
-    sOneDay = '<center><strong><h3>1 day</h3></center></strong><img src="' + jData['1day'] + '"></img>';
-    sSevenDay = '<center><strong><h3>7 day</h3></center></strong><img src="' + jData['7day'] + '"></img>';
+    sOneDay = jData['traffic']['1day'];
+    sSevenDay = jData['traffic']['7day'];
+    sOneDay = '<center><strong><h3>1 day</h3></center></strong><img src="' + sOneDay + '"></img>';
+    sSevenDay = '<center><strong><h3>7 day</h3></center></strong><img src="' + sSevenDay + '"></img>';
     sTag = sOneDay + sSevenDay;
     return sTag
 }

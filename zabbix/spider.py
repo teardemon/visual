@@ -24,9 +24,11 @@ class CSpider:
         try:
             oResponse = urllib2.urlopen(sUrl)
         except:
-            dResponse = {}
-        else:
+            return json.load({})
+        try:
             dResponse = json.load(oResponse)
+        except:
+            return json.load({})
         return dResponse
 
 
