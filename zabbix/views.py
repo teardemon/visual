@@ -19,7 +19,7 @@ g_object_key_store = keycache.CKeyStore(STR_PATH_KEY_VALUE)
 
 class CZabbix(View, spider.CSpider):
     m_zabbix_chart_full = 'http://10.32.18.176:8088/zapi/graph/?id=123&ip={0}&type={1}'  # {0}为ip，type为’host‘或者‘switch’
-    m_zabbix_chart_traffic = 'http://10.32.64.64/zabbix/chart2.php?graphid={0}&period={1}&updateProfile=1&profileIdx=web.screens&width=700'
+    m_zabbix_chart_traffic = 'http://10.32.64.64/zabbix/chart2.php?graphid={0}&period={1}&updateProfile=1&profileIdx=web.screens&width=900'
     m_dict_map = DICT_SWITCH_MAP
 
     def __init__(self):
