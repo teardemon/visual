@@ -5,11 +5,16 @@
 # 参考资料  :
 # 说明     :
 import yaml
+import os
+
+STR_PATH_CACHE = 'static/idc/cache/'
+STR_PATH_KEY_VALUE = os.path.join(STR_PATH_CACHE,'key_value.db')
+STR_PATH_INTERFACE = os.path.join(STR_PATH_CACHE, 'ip_to_interface.yaml')
 
 
 # 交换机ip和端口的映射 ， 该参数不允许类修改，只允许访问
 def get_switch_map():
-    object_file = file('static/idc/cache/ip_to_interface.yaml')
+    object_file = file(STR_PATH_INTERFACE)
     dict_switch_map = yaml.load(object_file)
     return dict_switch_map.copy()
 
@@ -20,7 +25,7 @@ def get_interface(switch_ip, line):
     :param line: 需要查询的交换机接口对应的线路
     :return: 交换机接口的名称
     '''
-    object_file = file('static/idc/cache/ip_to_interface.yaml')
+    object_file = file(STR_PATH_INTERFACE)
     dict_switch_map = yaml.load(object_file)
     if not switch_ip in dict_switch_map:
         return ''

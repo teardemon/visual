@@ -2,17 +2,20 @@
 from django.shortcuts import HttpResponse
 from django.views.generic import View
 
-import spider
+from tool import spider
 import re
 import json
 from conf import *
-
+from tool import keycache
 
 # 用途：传一个ip，返回两组html标签。分别为该ip的一天和七天流量记录
 # 流程：查询ip是交换机ip还是服务器ip
 
 # demo host:http://127.0.0.1/zabbix/chart/113.106.204.9
 # demo switch:http://127.0.0.1/zabbix/chart/113.106.204.126
+
+g_object_key_store = keycache.CKeyStore(STR_PATH_KEY_VALUE)
+
 
 class CZabbix(View, spider.CSpider):
     m_zabbix_chart_full = 'http://10.32.18.176:8088/zapi/graph/?id=123&ip={0}&type={1}'  # {0}为ip，type为’host‘或者‘switch’
@@ -84,8 +87,11 @@ class CZabbix(View, spider.CSpider):
             str_traffic_url_demo = ''
         return str_traffic_url_demo
 
-    # http://10.32.64.64/zabbix/chart2.php?graphid=50832&period=3600&updateProfile=1&profileIdx=web.screens&width=600
     def get_graph_id(self, str_traffic_url_demo):
+        '''
+        :param str_traffic_url_demo: 例如# http://10.32.64.64/zabbix/chart2.php?graphid=50832&period=3600&updateProfile=1&profileIdx=web.screens&width=600
+        :return: None。仅仅从demo url中提取出 graph id 保存起来
+        '''
         if not str_traffic_url_demo:
             return ''
         object_ret = re.search('(?<=graphid=)\d+', str_traffic_url_demo)
@@ -105,15 +111,47 @@ class CZabbix(View, spider.CSpider):
         # 需要一个ip
         return 0
 
-    def get(self, request, *args, **kwargs):
-        if request.method == 'GET':  # and request.is_ajax():
-            self.m_dict_ret['ip'] = request.GET.get('ip')
-            self.m_dict_ret['line'] = request.GET.get('line')
+    def clear(self):
+        self.__init__()
+
+    def has_cache(self):
+        if g_object_key_store.has_key(self.m_dict_ret['ip']):
+            return 1
+        return 0
+
+    def add_cache(self, json_chart_info):
+        if not self.m_dict_ret['traffic']['graphid']:
+            return
+        dict_cache = {
+            self.m_dict_ret['ip']: json_chart_info
+        }
+        g_object_key_store.store(dict_cache)
+
+    def read_cache(self, str_ip):
+        str_chart_info = g_object_key_store.key(str_ip)
+        # print  '读取缓存', str_chart_info
+        dict_chart_info = eval(str_chart_info)
+        json_chart_info = json.dumps(dict_chart_info)
+        return json_chart_info
+
+    def new_info(self):
         json_info = self.get_info()
-        str_traffic_url_demo = self.get_chart_url(json_info)
+        str_traffic_url_demo = self.get_chart_url(json_info)  # 强尧的demo url，其中包含了图形对应的graph id
         self.get_graph_id(str_traffic_url_demo)
         self.assemble()
         json_chart_info = json.dumps(self.m_dict_ret)
+        return json_chart_info
+
+    def get(self, request, *args, **kwargs):
+        self.clear()  # 清理上次执行时遗留的数据
+        if request.method == 'GET':  # and request.is_ajax():
+            self.m_dict_ret['ip'] = request.GET.get('ip')
+            self.m_dict_ret['line'] = request.GET.get('line')
+        if self.has_cache():  # 检查是否有缓存数据可用。缓存可能导致数据不更新，需要删除缓存文件以让程序重新获得数据
+            json_chart_info = self.read_cache(self.m_dict_ret['ip'])
+        else:
+            json_chart_info = self.new_info()
+            self.add_cache(json_chart_info)
         return HttpResponse(json_chart_info)
 
         # 报错文档：
