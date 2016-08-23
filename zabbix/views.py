@@ -58,7 +58,9 @@ class CZabbix(View, spider.CSpider):
         return ''
 
     def get_switch_chart_url(self, list_ret):
-        str_interface = get_interface(self.m_dict_ret['ip'], self.m_dict_ret['line'])
+        str_ip = self.m_dict_ret['ip']
+        str_line = self.m_dict_ret['line']
+        str_interface = get_interface(str_ip, str_line)
         for dict_interface_url in list_ret:
             for str_full_interface, str_url in dict_interface_url.iteritems():
                 if str_interface in str_full_interface:
@@ -122,13 +124,21 @@ class CZabbix(View, spider.CSpider):
     def add_cache(self, json_chart_info):
         if not self.m_dict_ret['traffic']['graphid']:
             return
-        dict_cache = {
-            self.m_dict_ret['ip']: json_chart_info
-        }
+        if self.m_dict_ret['type'] == 'switch':
+            dict_cache = {
+                self.m_dict_ret['line']: json_chart_info
+            }
+        else:
+            dict_cache = {
+                self.m_dict_ret['ip']: json_chart_info
+            }
         g_object_key_store.store(dict_cache)
 
-    def read_cache(self, str_ip):
-        str_chart_info = g_object_key_store.key(str_ip)
+    def read_cache(self):
+        if self.m_dict_ret['type'] == 'switch':
+            str_chart_info = g_object_key_store.key(self.m_dict_ret['line'])
+        else:
+            str_chart_info = g_object_key_store.key(self.m_dict_ret['ip'])
         # print  '读取缓存', str_chart_info
         dict_chart_info = eval(str_chart_info)
         json_chart_info = json.dumps(dict_chart_info)
@@ -144,11 +154,20 @@ class CZabbix(View, spider.CSpider):
 
     def get(self, request, *args, **kwargs):
         self.clear()  # 清理上次执行时遗留的数据
+
         if request.method == 'GET':  # and request.is_ajax():
             self.m_dict_ret['ip'] = request.GET.get('ip')
             self.m_dict_ret['line'] = request.GET.get('line')
+        else:
+            return HttpResponse()
+
+        if self.m_dict_ret['ip'] in self.m_dict_map:
+            self.m_dict_ret['type'] = 'switch'
+        else:
+            self.m_dict_ret['type'] = 'host'
+
         if self.has_cache():  # 检查是否有缓存数据可用。缓存可能导致数据不更新，需要删除缓存文件以让程序重新获得数据
-            json_chart_info = self.read_cache(self.m_dict_ret['ip'])
+            json_chart_info = self.read_cache()
         else:
             json_chart_info = self.new_info()
             self.add_cache(json_chart_info)
