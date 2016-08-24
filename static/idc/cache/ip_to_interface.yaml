@@ -11,6 +11,8 @@
 !!python/unicode '124.95.140.60': {沈阳联通: !!python/unicode 'GigabitEthernet0/24'}
 !!python/unicode '172.16.9.2': {南方基地: !!python/unicode 'Ten-GigabitEthernet1/0/25'}
 !!python/unicode '183.60.198.126': {顺德电信: !!python/unicode 'GigabitEthernet0/24'}
+!!python/unicode '183.95.88.82': {武汉银联移动: !!python/unicode 'GigabitEthernet1/0/2',
+  武汉银联联通: !!python/unicode 'GigabitEthernet1/0/1'}
 !!python/unicode '218.213.229.66': {香港: !!python/unicode 'GigabitEthernet1/0/24'}
 !!python/unicode '219.132.195.1': {佛山电信: !!python/unicode 'TenGigabitEthernet1/1',
   佛山联通: !!python/unicode 'TenGigabitEthernet1/3'}
