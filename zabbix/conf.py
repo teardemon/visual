@@ -7,9 +7,13 @@
 import yaml
 import os
 
-STR_PATH_CACHE = 'static/idc/cache/'
-STR_PATH_KEY_VALUE = os.path.join(STR_PATH_CACHE,'key_value.db')
-STR_PATH_INTERFACE = os.path.join(STR_PATH_CACHE, 'ip_to_interface.yaml')
+STR_PATH_IDC_CACHE = 'static/idc/cache/'
+STR_PATH_IDC_KEY_VALUE = os.path.join(STR_PATH_IDC_CACHE, 'key_value.db')
+
+STR_PATH_ADSL_CACHE = 'static/adsl/cache/'
+STR_PATH_ADSL_KEY_VALUE = os.path.join(STR_PATH_ADSL_CACHE, 'key_value.db')
+
+STR_PATH_INTERFACE = os.path.join(STR_PATH_IDC_CACHE, 'ip_to_interface.yaml')
 
 
 # 交换机ip和端口的映射 ， 该参数不允许类修改，只允许访问

@@ -8,19 +8,19 @@ import json
 from conf import *
 from tool import keycache
 
+
 # 用途：传一个ip，返回两组html标签。分别为该ip的一天和七天流量记录
 # 流程：查询ip是交换机ip还是服务器ip
 
 # demo host:http://127.0.0.1/zabbix/chart/113.106.204.9
 # demo switch:http://127.0.0.1/zabbix/chart/113.106.204.126
 
-g_object_key_store = keycache.CKeyStore(STR_PATH_KEY_VALUE)
 
-
-class CZabbix(View, spider.CSpider):
+class CChart(View, spider.CSpider):
     m_zabbix_chart_full = 'http://10.32.18.176:8088/zapi/graph/?id=123&ip={0}&type={1}'  # {0}为ip，type为’host‘或者‘switch’
     m_zabbix_chart_traffic = 'http://10.32.64.64/zabbix/chart2.php?graphid={0}&period={1}&updateProfile=1&profileIdx=web.screens&width=900'
-    m_dict_map = DICT_SWITCH_MAP
+    m_object_key_store = keycache.CKeyStore(STR_PATH_IDC_KEY_VALUE)
+    m_dict_map = DICT_SWITCH_MAP  # 定位一个graph id即定位一个网口。需要ＩＰ和网口名称，该字典将传入的线路名称转为网口名称。
 
     def __init__(self):
         # 为了方便获得数据，使用一个字典来维持在该类中需要用到的参数。这样数据传递不会乱，而且数据结构直观
@@ -117,7 +117,7 @@ class CZabbix(View, spider.CSpider):
         self.__init__()
 
     def has_cache(self):
-        if g_object_key_store.has_key(self.m_dict_ret['ip']):
+        if self.m_object_key_store.has_key(self.m_dict_ret['ip']):
             return 1
         return 0
 
@@ -132,14 +132,13 @@ class CZabbix(View, spider.CSpider):
             dict_cache = {
                 self.m_dict_ret['ip']: json_chart_info
             }
-        g_object_key_store.store(dict_cache)
+        self.m_object_key_store.store(dict_cache)
 
     def read_cache(self):
         if self.m_dict_ret['type'] == 'switch':
-            str_chart_info = g_object_key_store.key(self.m_dict_ret['line'])
+            str_chart_info = self.m_object_key_store.key(self.m_dict_ret['line'])
         else:
-            str_chart_info = g_object_key_store.key(self.m_dict_ret['ip'])
-        # print  '读取缓存', str_chart_info
+            str_chart_info = self.m_object_key_store.key(self.m_dict_ret['ip'])
         dict_chart_info = eval(str_chart_info)
         json_chart_info = json.dumps(dict_chart_info)
         return json_chart_info
@@ -157,7 +156,7 @@ class CZabbix(View, spider.CSpider):
 
         if request.method == 'GET':  # and request.is_ajax():
             self.m_dict_ret['ip'] = request.GET.get('ip')
-            self.m_dict_ret['line'] = request.GET.get('line')
+            self.m_dict_ret['line'] = request.GET.get('line')  # 该参数用于转换得到交换机对应的网口
         else:
             return HttpResponse()
 
@@ -176,3 +175,88 @@ class CZabbix(View, spider.CSpider):
         # 报错文档：
         # 'str' object has no attribute 'get'
         # return 的必须是 HttpResponse()，其他django方法只是做了封装
+
+
+class CInterface(View):
+    def __init__(self):
+        self.m_json_respond = {}
+        self.m_object_key_store = keycache.CKeyStore(STR_PATH_ADSL_KEY_VALUE)
+
+    def get_respond(self, dict_result, bool_success=1, str_tip=''):  # 一些语言的true必须大写开头，有的又不等于１．所以通用１
+        if not isinstance(dict_result, dict):
+            raise Exception('get_respond的第一个参数必须是字典')
+        dict_respond = {
+            'result': dict_result,
+            'success': bool_success,
+            'tip': str_tip
+        }
+        json_respond = json.dumps(dict_respond)
+        return json_respond
+
+    def transfer_format(self, *args, **kwargs):
+        if not args:
+            self.m_json_respond = self.get_respond({}, 0, 'expect args')
+        try:
+            dict_input = eval(args[0])
+        except:
+            self.m_json_respond = self.get_respond({}, 0, 'expect json as input')
+            return {}
+        else:
+            if not isinstance(dict_input, dict):
+                self.m_json_respond = self.respond({}, 0, 'expect json as input')
+            return dict_input
+
+
+class CInput(CInterface):
+    '''
+    用于接受数据输入，数据作为键值对缓存被保存起来
+    '''
+
+    def deal_input(self, *args, **kwargs):
+        dict_input = self.transfer_format(*args, **kwargs)
+        if dict_input:
+            dict_cache = {'adsl': dict_input}
+            self.m_object_key_store.store(dict_cache)
+            self.m_json_respond = self.get_respond({})
+
+    def null_input(self):
+        self.m_json_respond = self.get_respond({}, '0', 'input is null')
+
+    def get(self, request, *args, **kwargs):
+        if args or kwargs:  # and request.is_ajax():
+            self.deal_input(*args, **kwargs)
+        elif request.GET.get('adsl'):
+            json_input = request.GET.get('adsl')
+            self.deal_input(json_input)
+        else:
+            self.null_input()
+        return HttpResponse(self.m_json_respond)
+
+
+class COutput(CInterface):
+    '''
+    读取新数据并输出
+    '''
+
+    def __init__(self):
+        super(COutput, self).__init__()
+        self.m_list_allow_key = ['adsl']
+
+    def deal_ouput(self):
+        if self.m_object_key_store.has_key('adsl'):
+            str_dict_output = self.m_object_key_store.key('adsl')
+            dict_output = eval(str_dict_output)
+            self.m_json_respond = self.get_respond(dict_output, 1, '')
+        else:
+            self.m_json_respond = self.get_respond({}, 1, 'data is null')
+
+    def get(self, request):
+        if request.method == 'GET':  # and request.is_ajax():
+            str_key = request.GET.get('key')
+        if str_key in self.m_list_allow_key:
+            self.deal_ouput()
+        return HttpResponse(self.m_json_respond)
+
+
+if __name__ == '__main__':
+    pass

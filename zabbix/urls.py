@@ -2,9 +2,12 @@
 from django.conf.urls import patterns, url
 from zabbix import views
 
+##http://127.0.0.1/zabbix/chart?ip=116.211.88.27
+
 urlpatterns = patterns('',
-                       # url(r'^chart/(.+)/$', views.CZabbix.as_view(), {'on_hook': False}, name='index'),
-                       url(r'^chart$', views.CZabbix.as_view(), {'on_hook': False}, name='index'),
+                       url(r'^chart$', views.CChart.as_view(), {'on_hook': False}, name='index'),
+                       url(r'^input/$', views.CInput.as_view(), name='index'),
+                       url(r'^output/$', views.COutput.as_view(), name='index'),
                        )
 
 # url(r^/account/$', views.index, name=index)，它可以接收四个参数，
