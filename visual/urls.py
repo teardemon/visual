@@ -23,5 +23,6 @@ urlpatterns = patterns('',
                        url(r'^idc/', include('idc.urls')),
                        url(r'adsl', include('adsl.urls')),
                        url(r'^zabbix/', include('zabbix.urls')),
+                       url(r'^custom/', include('custom.urls')),
                        url(r'^admin/', include(admin.site.urls)),
                        )

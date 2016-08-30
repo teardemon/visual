@@ -14,7 +14,7 @@
         function DynamicDrawChart() {
             $.ajax({
                 // url: '/zabbix/chart/' + sZabbixIP,
-                url: '/zabbix/output/',
+                url: '/custom/output/',
                 data: "key=adsl",// data: '{ip:' + sZabbixIP + ',line:' + sTagID + '}',
                 type: 'GET',
                 success: function (sData) {//complete() will always get called no matter if the ajax call was successful or not
@@ -24,10 +24,14 @@
                     } else {
                         console.log('后端没能给予正确的数据，提示：' + jData['tip']);
                     }
-                    {#                    setTimeout(DynamicDrawChart, 1000)#}
                 }
             })
         }
         DynamicDrawChart()
+    </script>
+    <script>
+        {% if int_setTimeout %}
+            window.setInterval(DynamicDrawChart, {{ int_setTimeout }});
+        {% endif %}
     </script>
 {% endblock %}
