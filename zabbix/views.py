@@ -1,5 +1,6 @@
 # <coding:utf-8>
 from django.shortcuts import HttpResponse
+from django.shortcuts import render_to_response
 from django.views.generic import View
 
 from tool import spider
@@ -227,6 +228,7 @@ class CInput(CInterface):
 
     def __init__(self):
         super(CInput, self).__init__()
+        self.m_list_html = ['bar.html', 'pie.html']
         self.m_dict_request = {
             'key': '',
             'data': json.dumps({}),
@@ -241,20 +243,31 @@ class CInput(CInterface):
         str_key = self.m_dict_request['key']
 
         self.m_object_key_store = self.init_db(str_key)
-        dict_cache = {'lately': self.m_dict_request}
+        dict_cache = {'lately': {
+            'data': dict_data,
+            'key': self.m_dict_request['key']
+        }}
         self.m_object_key_store.store(dict_cache)
         self.m_json_respond = self.get_respond()
 
     def get(self, request):
         if not request.GET.get('key') or not request.GET.get('data'):
             self.m_json_respond = self.get_respond({}, 1, '需要至少两个参数：key和data')
-        else:
-            self.m_dict_request = {
-                'key': request.GET.get('key'),
-                'data': request.GET.get('data')
-            }
-            self.deal_input()
-        return HttpResponse(self.m_json_respond)
+            return HttpResponse(self.m_json_respond)
+        self.m_dict_request = {
+            'key': request.GET.get('key'),
+            'data': request.GET.get('data')
+        }
+        self.deal_input()
+        # live == 1 对传入的数据进行可视化的效果直播，同时依然进行数据的存储
+        if not request.GET.get('live') == '1':
+            return HttpResponse(self.m_json_respond)
+
+        str_chart = request.GET.get('chart')
+        str_file = '{0}.{1}'.format(str_chart, 'html')
+        if not str_file in self.m_list_html:
+            str_file = 'bar.html'
+        return render_to_response(str_file, self.m_json_respond)
 
 
 class COutput(CInterface):
