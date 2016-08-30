@@ -2,7 +2,7 @@
 
 {% block content %}
     <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-    <div id="main" style="width: 100%;height:600px;"></div>
+    <div id="main" style="width: 100%;height:1000px;"></div>
 {% endblock content %}
 
 {% block script %}
@@ -10,6 +10,17 @@
     <script src="/static/public/jquery/jquery.js"></script>
     <script src="/static/adsl/js/adsl.js"></script>
     <script type="text/javascript">
+        //根据条目设置宽度
+        function SetHeight(jData) {
+            var iLen = 0;
+            for (i in  jData['result']['data']) {
+                iLen++
+            }
+            iHeight = iLen * 120;
+            console.log(iHeight);
+            document.getElementById("main").style.height = iHeight + "px";
+        }
+
         // 基于准备好的dom，初始化echarts实例
         function DynamicDrawChart() {
             $.ajax({
@@ -19,6 +30,7 @@
                 type: 'GET',
                 success: function (sData) {//complete() will always get called no matter if the ajax call was successful or not
                     jData = JSON.parse(sData);
+                    SetHeight(jData);
                     if (jData['success'] == 1) {
                         drawChart(jData['result']['data'], 'main');
                     } else {

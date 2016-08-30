@@ -99,7 +99,7 @@ class CInput(CInterface):
 
     def get(self, request):
         if not request.GET.get('key') or not request.GET.get('data'):
-            self.m_json_respond = self.get_respond({}, 1, '需要至少两个参数：key和data')
+            self.m_json_respond = self.get_respond({}, 1, 'need two param at least: key and data')
             return HttpResponse(self.m_json_respond)
         self.m_dict_request = {
             'key': request.GET.get('key'),
@@ -153,7 +153,7 @@ class COutput(CInterface):
     def get(self, request):
         str_key = request.GET.get('key')
         if not str_key:
-            self.m_json_respond = self.get_respond({}, 1, '需要至少一个参数：key')
+            self.m_json_respond = self.get_respond({}, 1, 'key is need')
         if not self.is_db(str_key):
             self.m_json_respond = self.get_respond({}, 0, 'key:{0} is not exist'.format(str_key))
             return HttpResponse(self.m_json_respond)
