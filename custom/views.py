@@ -11,7 +11,7 @@ from tool import keycache
 
 # Create your views here.
 class CInterface(View):
-    def __init__(self, str_key='public.db'):
+    def __init__(self, str_key='public'):
         self.m_list_html = ['bar.html']
         self.m_json_respond = {}
         self.m_object_key_store = self.init_db(str_key)
@@ -144,6 +144,8 @@ class COutput(CInterface):
 
     def get_timeout(self, request):
         str_timeout = request.GET.get('timeout')
+        if not str_timeout:
+            return 0
         int_timeout = int(str_timeout)
         int_timeout = int_timeout * 1000  # setTimeout是以毫秒为单位的，转为ｓ
         return int_timeout
