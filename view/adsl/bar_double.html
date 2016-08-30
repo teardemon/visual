@@ -20,7 +20,7 @@
                 success: function (sData) {//complete() will always get called no matter if the ajax call was successful or not
                     jData = JSON.parse(sData);
                     if (jData['success'] == 1) {
-                        drawChart(jData['result'], 'main');
+                        drawChart(jData['result']['data'], 'main');
                     } else {
                         console.log('后端没能给予正确的数据，提示：' + jData['tip']);
                     }

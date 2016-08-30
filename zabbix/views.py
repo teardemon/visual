@@ -178,11 +178,24 @@ class CChart(View, spider.CSpider):
 
 
 class CInterface(View):
-    def __init__(self):
+    def __init__(self, str_key='public.db'):
         self.m_json_respond = {}
-        self.m_object_key_store = keycache.CKeyStore(STR_PATH_ADSL_KEY_VALUE)
+        self.m_object_key_store = self.init_db(str_key)
 
-    def get_respond(self, dict_result, bool_success=1, str_tip=''):  # 一些语言的true必须大写开头，有的又不等于１．所以通用１
+    def init_db(self, str_key):
+        str_name_db = self.get_name_db(str_key)
+        str_path_db = self.get_path_db(str_name_db)
+        return keycache.CKeyStore(str_path_db)
+
+    def get_name_db(self, str_key):
+        str_name_db = '{0}.{1}'.format(str_key, 'db')
+        return str_name_db
+
+    def get_path_db(self, str_name_db):
+        str_path_db = STR_PATH_KEY_VALUE.format(str_name_db)
+        return str_path_db
+
+    def get_respond(self, dict_result={}, bool_success=1, str_tip=''):  # 一些语言的true必须大写开头，有的又不等于１．所以通用１
         if not isinstance(dict_result, dict):
             raise Exception('get_respond的第一个参数必须是字典')
         dict_respond = {
@@ -212,24 +225,35 @@ class CInput(CInterface):
     用于接受数据输入，数据作为键值对缓存被保存起来
     '''
 
-    def deal_input(self, *args, **kwargs):
-        dict_input = self.transfer_format(*args, **kwargs)
-        if dict_input:
-            dict_cache = {'adsl': dict_input}
-            self.m_object_key_store.store(dict_cache)
-            self.m_json_respond = self.get_respond({})
+    def __init__(self):
+        super(CInput, self).__init__()
+        self.m_dict_request = {
+            'key': '',
+            'data': json.dumps({}),
+            'commit': '',
+        }
 
-    def null_input(self):
-        self.m_json_respond = self.get_respond({}, '0', 'input is null')
+    def deal_input(self):
+        dict_data = self.m_dict_request['data']
+        dict_input = self.transfer_format(dict_data)
+        if not dict_input:
+            return
+        str_key = self.m_dict_request['key']
 
-    def get(self, request, *args, **kwargs):
-        if args or kwargs:  # and request.is_ajax():
-            self.deal_input(*args, **kwargs)
-        elif request.GET.get('adsl'):
-            json_input = request.GET.get('adsl')
-            self.deal_input(json_input)
+        self.m_object_key_store = self.init_db(str_key)
+        dict_cache = {'lately': self.m_dict_request}
+        self.m_object_key_store.store(dict_cache)
+        self.m_json_respond = self.get_respond()
+
+    def get(self, request):
+        if not request.GET.get('key') or not request.GET.get('data'):
+            self.m_json_respond = self.get_respond({}, 1, '需要至少两个参数：key和data')
         else:
-            self.null_input()
+            self.m_dict_request = {
+                'key': request.GET.get('key'),
+                'data': request.GET.get('data')
+            }
+            self.deal_input()
         return HttpResponse(self.m_json_respond)
 
 
@@ -240,21 +264,28 @@ class COutput(CInterface):
 
     def __init__(self):
         super(COutput, self).__init__()
-        self.m_list_allow_key = ['adsl']
+        self.m_dict_request = {
+            'key': '',
+        }
 
-    def deal_ouput(self):
-        if self.m_object_key_store.has_key('adsl'):
-            str_dict_output = self.m_object_key_store.key('adsl')
+    def deal_ouput(self, str_key):
+        self.m_object_key_store = self.init_db(str_key)
+        if self.m_object_key_store.has_key('lately'):
+            str_dict_output = self.m_object_key_store.key('lately')
             dict_output = eval(str_dict_output)
+            dict_output = {
+                'data': eval(dict_output['data']),  # 可能是编码的原因，eval对嵌套的内层字典没自动转换数据结构
+                'key': dict_output['key']
+            }
             self.m_json_respond = self.get_respond(dict_output, 1, '')
         else:
             self.m_json_respond = self.get_respond({}, 1, 'data is null')
 
     def get(self, request):
-        if request.method == 'GET':  # and request.is_ajax():
-            str_key = request.GET.get('key')
-        if str_key in self.m_list_allow_key:
-            self.deal_ouput()
+        if not request.GET.get('key'):
+            self.m_json_respond = self.get_respond({}, 1, '需要至少一个参数：key')
+        str_key = request.GET.get('key')
+        self.deal_ouput(str_key)
         return HttpResponse(self.m_json_respond)
 
 

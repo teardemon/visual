@@ -13,6 +13,9 @@ STR_PATH_IDC_KEY_VALUE = os.path.join(STR_PATH_IDC_CACHE, 'key_value.db')
 STR_PATH_ADSL_CACHE = 'static/adsl/cache/'
 STR_PATH_ADSL_KEY_VALUE = os.path.join(STR_PATH_ADSL_CACHE, 'key_value.db')
 
+# 自定义的路径
+STR_PATH_KEY_VALUE = 'data/db/{0}'
+
 STR_PATH_INTERFACE = os.path.join(STR_PATH_IDC_CACHE, 'ip_to_interface.yaml')
 
 
