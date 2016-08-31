@@ -3,30 +3,53 @@
  * 仅仅对数据进行展示，没有额外的处理
  */
 
-function GetLegendData(jDateValue) {
+function GetLegendData(jDataValue) {
     var aLegendData = new Array();
-    for (var sCircle in jDateValue) {
-        for (var index in jDateValue[sCircle]) {
-            var sName = jDateValue[sCircle][index]['name'];
+    for (var sCircle in jDataValue) {
+        for (var index in jDataValue[sCircle]) {
+            var sName = jDataValue[sCircle][index]['name'];
             aLegendData.push(sName);
         }
     }
     return aLegendData
 }
 
-// 格式化数据,同时给数据进行排序
-function Format(jDataValue) {
+function FormatInner(jDataValue) {
     var aInner = new Array();
-    aInner.push({'name': '已用', 'value': jDataValue.inner.used});
-    aInner.push({'name': '未用', 'value': jDataValue.inner.total - jDataValue.inner.used});
+    sName = 'IP' + jDataValue.outer_name + '<br/>';
+    aInner.push({'name': '已用', 'value': jDataValue.inner.used.toFixed(2)});
+    aInner.push({'name': '未用', 'value': jDataValue.inner.total - jDataValue.inner.used.toFixed(2)});
+    return aInner
+}
 
+function FormatOuter(jDataValue) {
     // top10的ip占比
     var aOuter = new Array();
     //占比最高的top10总共使用的流量
-    for (var sItem in jDataValue.outer) {
-        aOuter.push({'name': sItem, 'value': jDataValue.outer[sItem]});
+    for (var sIP in jDataValue.outer) {
+        //用途:<br/>
+        fValue = jDataValue.outer[sIP]['traffic'];
+        sUsage = jDataValue.outer[sIP]['usage'];
+        if (sIP == 'other') {
+            aOuter.push({'name': 'other', 'value': jDataValue.outer['other']});
+        } else if (fValue != 0 && fValue) {//注意机房统计那个图的格式
+            fValue = fValue.toFixed(2);//iValue必须是非０浮点数
+            sName = '用途:' + sUsage + '<br/>带宽:' + fValue + ' Mb/s<br/>IP:' + sIP + '<br/>占机房已用带宽百分比:';
+            aOuter.push({'name': sName, 'value': fValue});
+        } else {
+            sName = '用途:' + sUsage + '<br/>带宽:0  Mb/s<br/>IP:' + sIP + '<br/>占机房已用带宽百分比:';
+            aOuter.push({'name': sName, 'value': fValue});
+            //机房总计是没有TOP10的
+            console.log(jDataValue.inner_name,sIP,fValue)
+        }
     }
+    return aOuter
+}
 
+// 格式化数据,同时给数据进行排序
+function Format(jDataValue) {
+    aInner = FormatInner(jDataValue);
+    aOuter = FormatOuter(jDataValue);
     var jNowData = {
         'inner': aInner,
         'outer': aOuter
@@ -36,16 +59,16 @@ function Format(jDataValue) {
 
 // 内环总为深色，外网第一个总和内环同色，其后为第一个同色系的浅色
 
-function GetOption(jDateValue, sTagID, Theme) {
+function GetOption(jDataValue, sTagID, Theme) {
 
-    aFormated = Format(jDateValue);
-    //sColorInner = GetColorInner(JDateValue);
+    aFormated = Format(jDataValue);
+    //sColorInner = GetColorInner(jDataValue);
 
 
     /*染色方法：
      当一个机房没有10个ip的时候显示意义会不正确
      */
-    var iRate = jDateValue.inner.used / jDateValue.inner.total;
+    var iRate = jDataValue.inner.used / jDataValue.inner.total;
     //该样式中，外圈的颜色跟随内圈变化
     if (Theme == 1) {
         if (iRate > 0.9) {
@@ -98,14 +121,21 @@ function GetOption(jDateValue, sTagID, Theme) {
         color: aOptionColor,
         tooltip: {//提示框，当聚焦后显示
             trigger: 'item',//触发方式：数据项图形触发
-            formatter: "{b}: {c} mb/s \<br/\>占比: {d} %"
+            /*
+             饼图、仪表盘、漏斗图: {a}（系列名称），{b}（数据项名称），{c}（数值）, {d}（百分比）
+             {a} series.name
+             {b} 根据{'name': '已用', 'value': jDataValue.inner.used} 中的name决定
+             {c} {'name': '已用', 'value': jDataValue.inner.used} 中的value决定
+             {d}
+             * */
+            formatter: "{b} {d} %"
         },
         title: {
             itemGap: 6,//主副标题之间的间距
             target: 'blank',//打开标题超链接
             text: sTagID,
             //显示未用，以检查计算错误
-            subtext: '总带宽: ' + jDateValue.inner.total + ' mb/s\n' + '已用: ' + jDateValue.inner.used + ' mb/s',//\n'+'未用:'+non_used+ 'M/s',
+            subtext: '总带宽: ' + jDataValue.inner.total + ' mb/s\n' + '已用: ' + jDataValue.inner.used + ' mb/s',//\n'+'未用:'+non_used+ 'M/s',
             x: 'center',
             textStyle: {
                 fontSize: 32
@@ -121,7 +151,7 @@ function GetOption(jDateValue, sTagID, Theme) {
          * */
         series: [
             {//内环的样式
-                name: jDateValue.outer_name,
+                name: jDataValue.inner_name,
                 center: ['50%', '63%'],//图形的中心坐标，默认['50%'，‘50%’]
                 type: 'pie',
                 radius: [0, '60%'], //内环的大小，内径为0则为圆
@@ -208,6 +238,10 @@ function ShownModel() {
 }
 
 function ZabbixChart(sZabbixIP, sTagID) {
+    //外环类似为：用途:CDN下载<br/>带宽:336.95 Mb/s<br/>IP:113.106.204.141<br/>占机房已用带宽百分比: 惠州电信2
+    //内环直接为:ip，所以这里增加正则，只匹配ip
+    var re = /\d{1,3}\.\d{1,3}.\d{1,3}.\d{1,3}/g;
+    sZabbixIP = sZabbixIP.match(re);
     console.log(sZabbixIP, sTagID);
     $.ajax({
         // url: '/zabbix/chart/' + sZabbixIP,
@@ -248,8 +282,8 @@ function SetEvent(oChart, sTagID) {
  * sTagID：画图的html标签的id
  * Theme：绘图的样式编号
  * */
-function drawChart(jDateValue, sTagID, Theme) {
-    jOption = GetOption(jDateValue, sTagID, Theme);
+function drawChart(jDataValue, sTagID, Theme) {
+    jOption = GetOption(jDataValue, sTagID, Theme);
     oChart = SetOption(jOption, sTagID);
     SetEvent(oChart, sTagID);
 }
