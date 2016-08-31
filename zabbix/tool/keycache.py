@@ -49,7 +49,6 @@ class CKeyStore():
         for str_k, v in dict_cache.iteritems():
             str_k = self.transcoding(str_k)
             self.m_object_db[str_k] = str(v)
-        self.close()
 
     def key(self, str_key):
         str_key = self.transcoding(str_key)
