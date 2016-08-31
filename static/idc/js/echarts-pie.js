@@ -98,14 +98,14 @@ function GetOption(jDateValue, sTagID, Theme) {
         color: aOptionColor,
         tooltip: {//提示框，当聚焦后显示
             trigger: 'item',//触发方式：数据项图形触发
-            formatter: "{b}: {c} Mb/s \<br/\>占比: {d} %"
+            formatter: "{b}: {c} mb/s \<br/\>占比: {d} %"
         },
         title: {
             itemGap: 6,//主副标题之间的间距
             target: 'blank',//打开标题超链接
             text: sTagID,
             //显示未用，以检查计算错误
-            subtext: '总带宽: ' + jDateValue.inner.total + 'Mb/s\n' + '已用: ' + jDateValue.inner.used + 'Mb/s',//\n'+'未用:'+non_used+ 'M/s',
+            subtext: '总带宽: ' + jDateValue.inner.total + ' mb/s\n' + '已用: ' + jDateValue.inner.used + ' mb/s',//\n'+'未用:'+non_used+ 'M/s',
             x: 'center',
             textStyle: {
                 fontSize: 32
