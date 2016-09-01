@@ -14,11 +14,21 @@ function GetLegendData(jDataValue) {
     return aLegendData
 }
 
+function FormatSeriesName(jDataValue) {
+    var sIP = jDataValue.inner_name;
+    var sName = '已用:' + iUsed + ' Mb/s<br/>未用:' + iFree + ' Mb/s<br/>IP:' + sIP;
+    return sName
+}
+
 function FormatInner(jDataValue) {
     var aInner = new Array();
-    sName = 'IP' + jDataValue.outer_name + '<br/>';
-    aInner.push({'name': '已用', 'value': jDataValue.inner.used.toFixed(2)});
-    aInner.push({'name': '未用', 'value': jDataValue.inner.total - jDataValue.inner.used.toFixed(2)});
+    iUsed = jDataValue.inner.used.toFixed(2);
+    // var sName = '带宽:' + iUsed + ' Mb/s<br/>IP:' + sIP + '<br/>占机房已用带宽百分比:';
+    aInner.push({'name': '', 'value': iUsed});
+
+    iFree = (jDataValue.inner.total - jDataValue.inner.used).toFixed(2);
+    // var sName = '带宽:' + iFree + ' Mb/s<br/>IP:' + sIP + '<br/>占机房已用带宽百分比:';
+    aInner.push({'name': '', 'value': iFree});
     return aInner
 }
 
@@ -40,7 +50,6 @@ function FormatOuter(jDataValue) {
             sName = '用途:' + sUsage + '<br/>带宽:0  Mb/s<br/>IP:' + sIP + '<br/>占机房已用带宽百分比:';
             aOuter.push({'name': sName, 'value': fValue});
             //机房总计是没有TOP10的
-            console.log(jDataValue.inner_name,sIP,fValue)
         }
     }
     return aOuter
@@ -50,9 +59,11 @@ function FormatOuter(jDataValue) {
 function Format(jDataValue) {
     aInner = FormatInner(jDataValue);
     aOuter = FormatOuter(jDataValue);
+    sSeriesName = FormatSeriesName(jDataValue);
     var jNowData = {
         'inner': aInner,
-        'outer': aOuter
+        'outer': aOuter,
+        'name': sSeriesName
     };
     return jNowData
 }
@@ -127,15 +138,18 @@ function GetOption(jDataValue, sTagID, Theme) {
              {b} 根据{'name': '已用', 'value': jDataValue.inner.used} 中的name决定
              {c} {'name': '已用', 'value': jDataValue.inner.used} 中的value决定
              {d}
+
+             外环没有{a} 即:外环没有系列名称
+             内环没有{b} 即:项目名，数据格式为 {'':值}
              * */
-            formatter: "{b} {d} %"
+            formatter: "{a} {b}"
         },
         title: {
             itemGap: 6,//主副标题之间的间距
             target: 'blank',//打开标题超链接
             text: sTagID,
             //显示未用，以检查计算错误
-            subtext: '总带宽: ' + jDataValue.inner.total + ' mb/s\n' + '已用: ' + jDataValue.inner.used + ' mb/s',//\n'+'未用:'+non_used+ 'M/s',
+            subtext: '总带宽: ' + jDataValue.inner.total + ' Mb/s\n' + '已用: ' + jDataValue.inner.used + ' Mb/s',//\n'+'未用:'+non_used+ 'M/s',
             x: 'center',
             textStyle: {
                 fontSize: 32
@@ -151,7 +165,7 @@ function GetOption(jDataValue, sTagID, Theme) {
          * */
         series: [
             {//内环的样式
-                name: jDataValue.inner_name,
+                name: aFormated.name,
                 center: ['50%', '63%'],//图形的中心坐标，默认['50%'，‘50%’]
                 type: 'pie',
                 radius: [0, '60%'], //内环的大小，内径为0则为圆
@@ -173,7 +187,7 @@ function GetOption(jDataValue, sTagID, Theme) {
                 }
             },
             {//外环的样式
-                name: '外环',
+                name: '',
                 center: ['50%', '63%'],//图形的中心坐标，默认['50%'，‘50%’]
                 type: 'pie',
                 radius: ['67%', '74%'],//外环的内径和外径
@@ -181,10 +195,10 @@ function GetOption(jDataValue, sTagID, Theme) {
                 itemStyle: {
                     normal: { //没有聚焦时的样式
                         label: {
-                            show: false //ItemStyleShow //因为溢出div的设置还不会做，所以暂时用false
+                            show: false, //ItemStyleShow //因为溢出div的设置还不会做，所以暂时用false
                         },
                         labelLine: {
-                            show: bItemStyleShow //
+                            show: bItemStyleShow, //
                         }
                     },
                     emphasis: { //聚焦以后的样式
@@ -237,16 +251,17 @@ function ShownModel() {
     $("#myModal").modal('show');
 }
 
-function ZabbixChart(sZabbixIP, sTagID) {
+function ZabbixChart(sTip, sTagID) {
+    //sTip为图像聚焦时显示的提示框文本
     //外环类似为：用途:CDN下载<br/>带宽:336.95 Mb/s<br/>IP:113.106.204.141<br/>占机房已用带宽百分比: 惠州电信2
-    //内环直接为:ip，所以这里增加正则，只匹配ip
+    //内环类似为:
     var re = /\d{1,3}\.\d{1,3}.\d{1,3}.\d{1,3}/g;
-    sZabbixIP = sZabbixIP.match(re);
-    console.log(sZabbixIP, sTagID);
+    sTip = sTip.match(re);
+    console.log(sTip, sTagID);
     $.ajax({
         // url: '/zabbix/chart/' + sZabbixIP,
         url: '/zabbix/chart',
-        data: "ip=" + sZabbixIP + "&line=" + sTagID,// data: '{ip:' + sZabbixIP + ',line:' + sTagID + '}',
+        data: "ip=" + sTip + "&line=" + sTagID,// data: '{ip:' + sZabbixIP + ',line:' + sTagID + '}',
         type: 'GET',
         success: function (jData) {
             sTag = GetImgTag(jData);
@@ -266,14 +281,15 @@ function SetEvent(oChart, sTagID) {
             return ''
         }
         // 用于弹出 数据
-        if (param.seriesName == '外环') {
+        sOuterName = jOption.series[1].name;
+        if (param.seriesName == sOuterName) {
             //用户当前点击的是外环
-            var sZabbixIP = param.name
+            var sTip = param.name; //{'ip':'值'}
         } else {
             //用户当前点击的是内环
-            var sZabbixIP = param.seriesName
+            var sTip = param.seriesName
         }
-        ZabbixChart(sZabbixIP, sTagID)
+        ZabbixChart(sTip, sTagID)
     })
 }
 
