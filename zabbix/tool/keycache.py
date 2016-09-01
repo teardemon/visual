@@ -5,11 +5,16 @@
 # 参考资料  :
 '''
 https://pymotw.com/2/anydbm/
-'''
-# 用途：提供键值对的缓存
 
+'r'	Open existing database for reading only (default)
+'w'	Open existing database for reading and writing
+'c'	Open database for reading and writing, creating it if it doesn’t exist
+'n'	Always create a new, empty database, open for reading and writing
+# 用途：提供键值对的缓存
+'''
 import anydbm
 import unicodedata
+from define import *
 
 
 class CKeyStore():
@@ -19,6 +24,8 @@ class CKeyStore():
     '''
 
     def __init__(self, str_path_db, str_mode='c'):
+        self.m_path_db = str_path_db
+        self.m_mode = str_mode
         self.m_object_db = anydbm.open(str_path_db, str_mode)
 
     def __del__(self):
@@ -26,6 +33,9 @@ class CKeyStore():
         当一个对象在删除的时候需要更多的清洁工作的时候此方法很有用，比如套接字对象或者文件对象。
         '''
         self.close()
+
+    def open(self, str_mode='w'):
+        self.m_object_db = anydbm.open(self.m_path_db, str_mode)
 
     def close(self):
         '''
@@ -35,31 +45,29 @@ class CKeyStore():
         '''
         self.m_object_db.close()
 
-    def transcoding(self, string):
-        '''
-        # anydbm模块仅能解析ascii编码字符集的,而python编码字符集为unicode,
-        '''
-        if isinstance(string, unicode):
-            string = unicodedata.normalize('NFKD', string).encode('ascii', 'ignore')
-        return string
-
     def store(self, dict_cache):
+        self.open('w')
         if not isinstance(dict_cache, dict):
             raise Exception('keycahce.store()期待字典')
         for str_k, v in dict_cache.iteritems():
-            str_k = self.transcoding(str_k)
+            str_k = Transcoding(str_k)
             self.m_object_db[str_k] = str(v)
+        self.close()
 
     def key(self, str_key):
-        str_key = self.transcoding(str_key)
+        self.open('r')
+        str_key = Transcoding(str_key)
         if str_key in self.m_object_db:
             return self.m_object_db[str_key]
+        self.close()
 
     def has_key(self, str_key):
-        str_key = self.transcoding(str_key)
+        self.open('r')
+        str_key = Transcoding(str_key)
         if str(str_key) in self.m_object_db:
             return 1
         return 0
+        self.close
 
     def all(self):
         return self.m_object_db
@@ -97,10 +105,21 @@ if __name__ == '__main__':
     def demo4():
         # n ： 总是新建一个
         oKeyStore = CKeyStore('/tmp/a.db', 'n')
-        oKeyStore.store({'a': {'少年': 'a'}})
         oKeyStore.store({'a': {'a': 'b'}})
-        print oKeyStore.has_key('a')
         print oKeyStore.key('a')
+        oKeyStore.open()
 
 
-    demo3()
+    def demo5():
+        oKeyStore = CKeyStore('/tmp/a.db', 'n')
+        oKeyStore.store({'a': {'a': 'a'}})
+        oKeyStore.store({'b': {'b': 'b'}})
+        print oKeyStore.key('a')
+        print oKeyStore.key('b')
+        print oKeyStore.all()
+
+    def demo6():
+        oKeyStore = CKeyStore('top.cache', 'c')
+        a = oKeyStore.all()
+        print a
+    demo6()
