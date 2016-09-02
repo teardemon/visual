@@ -112,6 +112,22 @@ def GetProPath():
 	sProPath=GroupPath(lstProPath)
 	return sProPath
 
+os.path.dirname(os.path.abspath(__file__))
+
+def GetCurPath(sPath,iLeve=0):
+	sAbsPath=os.path.abspath(sPath)
+	sDirPath=os.path.dirname(sAbsPath)
+	if iLeve==0:
+		return sDirPath
+	lstPath=CutPath(sDirPath)
+	if iLeve>0:
+		lstPath =lstPath[0:iLeve]
+	else:
+		iEnd=len(lstPath)+iLeve
+		lstPath = lstPath[0:iEnd]
+	sPath=GroupPath(lstPath)
+	return sPath
+
 #完整测试,建议能使用单元测试的都必须写
 if __name__=='__main__':
 	def Test():

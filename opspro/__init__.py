@@ -8,4 +8,6 @@
 import public
 import visualserver
 
-visualserver.Init('/tmp', '/tmp')
+sPathOpspro = public.path.GetCurPath(__file__, -1)
+visualserver.Init(sPathOpspro, sPathOpspro)
+visualserver.Start()

@@ -14,10 +14,10 @@ from opspro.public.define import *
 
 def Init(sLogPath, sRootPath):
     SetGlobalManager('rootpath', sRootPath)  # 脚本的根路径，用于寻找资源
-    SetGlobalManager('log', rwtext.CRWText(sLogPath))
+    SetGlobalManager('log', rwtext.CRWText('{0}/{1}'.format(sLogPath, '/data/log')))
     SetGlobalManager("timer", timerctrl.CTimerManager())
     SetGlobalManager("alert", alert.CAlertManager())
-    SetGlobalManager("cache", keycache.CKeyStore('{0}/{1}'.format(sLogPath, 'top.cache')))
+    SetGlobalManager("cache", keycache.CKeyStore('{0}/{1}'.format(sLogPath, '/data/cache/top.cache')))
 
 
 def Start():

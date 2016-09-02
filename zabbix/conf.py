@@ -8,15 +8,14 @@ import yaml
 import os
 from tool import cal_map
 
-STR_PATH_IDC_CACHE = 'static/idc/cache/'
+from opspro.public.define import *
+
+STR_PATH_IDC_CACHE = os.path.join(GetGlobalManager('rootpath'), 'static/idc/cache/')
+STR_PATH_ADSL_CACHE = os.path.join(GetGlobalManager('rootpath'), 'static/adsl/cache/')
+STR_PATH_KEY_VALUE = os.path.join(GetGlobalManager('rootpath'), 'data/db/{0}')
+
 STR_PATH_IDC_KEY_VALUE = os.path.join(STR_PATH_IDC_CACHE, 'key_value.db')
-
-STR_PATH_ADSL_CACHE = 'static/adsl/cache/'
 STR_PATH_ADSL_KEY_VALUE = os.path.join(STR_PATH_ADSL_CACHE, 'key_value.db')
-
-# 自定义的路径
-STR_PATH_KEY_VALUE = 'data/db/{0}'
-
 STR_PATH_INTERFACE = os.path.join(STR_PATH_IDC_CACHE, 'ip_to_interface.yaml')
 
 

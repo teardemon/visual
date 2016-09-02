@@ -44,4 +44,4 @@ def CacheQuery():
 def PeriodCache():
     CacheQuery()
     Remove_Call_Out("periodcache")
-    Call_Out(PeriodCache, 15, "periodcache")  # 为了不重名，使用文件名作为注册名
+    Call_Out(PeriodCache, 30, "periodcache")  # 为了不重名，使用文件名作为注册名
