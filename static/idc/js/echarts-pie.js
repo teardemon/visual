@@ -48,7 +48,7 @@ function FormatOuter(jDataValue) {
         } else {
             //机房总计是没有TOP10的
             fValue = fValue.toFixed(2);//iValue必须是非０浮点数
-            fPercent = (fValue / jDataValue.used *100).toFixed(2);
+            fPercent = (fValue / jDataValue.used * 100).toFixed(2);
             sName = '用途:' + sUsage + '<br/>带宽:0  Mb/s<br/>IP:' + sIP + '<br/>占机房已用带宽百分比:' + fPercent + ' %';
             aOuter.push({'name': sName, 'value': fValue});
         }
@@ -96,8 +96,7 @@ function GetOption(jDataValue, sTagID, Theme) {
             var bItemStyleShow = false;
         }
     }
-    //该样式中，外圈的颜色是固定的
-    //这个渐变也很花'#CC3333', '#DD6D22', '#EE9611', '#D5B32B', '#FFCC00', '#EEEE11', '#6DDD22', '#B8DD22', '#C2EE11', '#CCFF00'
+    //该样式中，外圈的颜色是固定的。内圈颜色保持红黄绿随机房线路百分比变换
     else if (Theme == 2) {
         if (iRate > 0.9) {
             var aOptionColor = ['#FF0000', '#999999', '#005c99', '#0091f2', '#19a3ff', '#4db8ff', '#66c2ff', '#80ccff', '#99d6ff', '#b3e0ff', '#ccebff', '#e6f5ff', '#e6f5ff']; //'#FF0000' red
@@ -112,7 +111,33 @@ function GetOption(jDataValue, sTagID, Theme) {
             var bItemStyleShow = false;
         }
     }
-    else {
+    else if (Theme == 3) {
+        //该样式是波哥要求的：外环染色:分档４档染色。<=50 , 500-100 , 100-200,200>=
+        if (iRate > 0.9) {
+            var aOptionColor = ['#FF0000', '#999999']; //'#FF0000' red
+            var bItemStyleShow = true;
+        }
+        else if (iRate > 0.7) {
+            var aOptionColor = ['#FF8C00', '#999999']; //'#FF8C00'chengse
+            var bItemStyleShow = false;
+        }
+        else {
+            var aOptionColor = ['#32cd32', '#999999']; //'#32cd32' green
+            var bItemStyleShow = false;
+        }
+        for (i in aFormated.outer) {
+            aItem = aFormated.outer[i]; //{‘name’:'vaule'}
+            if (aItem['value'] >= 200) {
+                aOptionColor.push('#005c99');
+            } else if (100 <= aItem['value'] && aItem['value'] < 200) {
+                aOptionColor.push('#19a3ff');
+            } else if (50 <= aItem['value'] && aItem['value'] < 100) {
+                aOptionColor.push('#b3e0ff');
+            } else {
+                aOptionColor.push('#e6f5ff');
+            }
+        }
+    } else {
         if (iRate > 0.9) {
             var aOptionColor = ['#FF0000', '#999999', '#a60000', '#cc0000', '#ff0000', '#e62222', '#e63939', '#e65050', '#e66767', '#e67e7e', '#e69595', '#e6acac']; //'#FF0000' red
             var bItemStyleShow = true;

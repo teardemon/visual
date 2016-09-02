@@ -43,7 +43,7 @@ function AjaxDraw() {
             for (sServer in jEchartData) {
                 for (sLine in jEchartData[sServer]) {
                     tagAdd(sLine);
-                    drawChart(jEchartData[sServer][sLine], sLine, 2);
+                    drawChart(jEchartData[sServer][sLine], sLine, 3);
                 }
             }
         }
