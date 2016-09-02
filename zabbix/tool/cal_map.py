@@ -5,7 +5,7 @@
 # 参考资料  :
 # 说明     :交换机网口和ip的对应关系由强尧维护，该代码用以计算出本django程序所需要的yaml文件
 import yaml
-import spider
+from opspro.public import spider
 
 
 def static():
@@ -26,7 +26,7 @@ def static():
     object_file.close()
 
 
-def dynamic():
+def dynamic(str_path='ip_to_interface.yaml'):
     str_url = 'http://10.32.64.64:8000/info/getidc/'
     object_spider = spider.CSpider()
     json_map_info = object_spider.ReadJson(str_url)
@@ -41,9 +41,10 @@ def dynamic():
             if not dict_ret.has_key(dict_line_info['ip']):
                 dict_ret[str_ip] = {}
             dict_ret[str_ip][str_line_name] = str_interface
-    object_file = open('ip_to_interface.yaml', 'w')
+    object_file = open(str_path, 'w')
     yaml.dump(dict_ret, object_file, encoding='utf-8', allow_unicode=True)
     object_file.close()
 
 
-dynamic()
+if __name__ == '__main__':
+    dynamic()

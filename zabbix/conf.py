@@ -6,6 +6,7 @@
 # 说明     :
 import yaml
 import os
+from tool import cal_map
 
 STR_PATH_IDC_CACHE = 'static/idc/cache/'
 STR_PATH_IDC_KEY_VALUE = os.path.join(STR_PATH_IDC_CACHE, 'key_value.db')
@@ -21,9 +22,11 @@ STR_PATH_INTERFACE = os.path.join(STR_PATH_IDC_CACHE, 'ip_to_interface.yaml')
 
 # 交换机ip和端口的映射 ， 该参数不允许类修改，只允许访问
 def get_switch_map():
+    if not os.path.isfile(STR_PATH_INTERFACE):
+        cal_map.dynamic(STR_PATH_INTERFACE)
     object_file = file(STR_PATH_INTERFACE)
     dict_switch_map = yaml.load(object_file)
-    return dict_switch_map.copy()
+    return dict_switch_map
 
 
 def get_interface(switch_ip, line):

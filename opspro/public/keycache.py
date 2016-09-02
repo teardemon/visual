@@ -15,6 +15,7 @@ https://pymotw.com/2/anydbm/
 import anydbm
 import unicodedata
 from define import *
+import os
 
 
 class CKeyStore():
@@ -35,6 +36,8 @@ class CKeyStore():
         self.close()
 
     def open(self, str_mode='w'):
+        if not os.path.isfile(self.m_path_db):
+            str_mode = 'c'
         self.m_object_db = anydbm.open(self.m_path_db, str_mode)
 
     def close(self):
@@ -118,8 +121,11 @@ if __name__ == '__main__':
         print oKeyStore.key('b')
         print oKeyStore.all()
 
+
     def demo6():
         oKeyStore = CKeyStore('top.cache', 'c')
         a = oKeyStore.all()
         print a
+
+
     demo6()

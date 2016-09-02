@@ -1,13 +1,12 @@
 # <coding:utf-8>
 from django.shortcuts import HttpResponse
-from django.shortcuts import render_to_response
 from django.views.generic import View
-
-from tool import spider
 import re
 import json
 from conf import *
-from tool import keycache
+from opspro.public import spider
+from opspro.public import keycache
+from opspro.public.define import *
 
 
 # 用途：传一个ip，返回两组html标签。分别为该ip的一天和七天流量记录
@@ -21,7 +20,9 @@ class CChart(View, spider.CSpider):
     m_zabbix_chart_full = 'http://10.32.18.176:8088/zapi/graph/?id=123&ip={0}&type={1}'  # {0}为ip，type为’host‘或者‘switch’
     m_zabbix_chart_traffic = 'http://10.32.64.64/zabbix/chart2.php?graphid={0}&period={1}&updateProfile=1&profileIdx=web.screens&width=900'
     m_object_key_store = keycache.CKeyStore(STR_PATH_IDC_KEY_VALUE)
-    m_dict_map = DICT_SWITCH_MAP  # 定位一个graph id即定位一个网口。需要ＩＰ和网口名称，该字典将传入的线路名称转为网口名称。
+
+    # m_dict_map = DICT_SWITCH_MAP  # 定位一个graph id即定位一个网口。需要ＩＰ和网口名称，该字典将传入的线路名称转为网口名称。
+    # 用get_switch_map而不用m_dict_map是考虑配置文件ip_to_interface.yaml需要自动更新
 
     def __init__(self):
         # 为了方便获得数据，使用一个字典来维持在该类中需要用到的参数。这样数据传递不会乱，而且数据结构直观
@@ -42,7 +43,7 @@ class CChart(View, spider.CSpider):
         :return: 返回zabbix接口中关于一个ip的所有信息
         '''
         str_ip = self.m_dict_ret['ip']
-        if str_ip in self.m_dict_map:
+        if str_ip in get_switch_map():
             str_api_url_zabbix = self.m_zabbix_chart_full.format(str_ip, 'switch')
             self.m_dict_ret['type'] = 'switch'
         else:
@@ -56,6 +57,8 @@ class CChart(View, spider.CSpider):
             if 'Traffic on interface eth0' in dict_item:
                 str_url = dict_item['Traffic on interface eth0']
                 return str_url
+            else:
+                pass
         return ''
 
     def get_switch_chart_url(self, list_ret):
@@ -118,9 +121,12 @@ class CChart(View, spider.CSpider):
         self.__init__()
 
     def has_cache(self):
-        if self.m_object_key_store.has_key(self.m_dict_ret['ip']):
+        if self.m_dict_ret['type'] == 'host' and self.m_object_key_store.has_key(self.m_dict_ret['ip']):
             return 1
-        return 0
+        elif self.m_dict_ret['type'] == 'switch' and self.m_object_key_store.has_key(self.m_dict_ret['line']):
+            return 1
+        else:
+            return 0
 
     def add_cache(self, json_chart_info):
         if not self.m_dict_ret['traffic']['graphid']:
@@ -154,20 +160,21 @@ class CChart(View, spider.CSpider):
 
     def get(self, request, *args, **kwargs):
         self.clear()  # 清理上次执行时遗留的数据
-
+        ExecManagerFunc('alert', 'Alert', '测试', 8766)
         if request.method == 'GET':  # and request.is_ajax():
             self.m_dict_ret['ip'] = request.GET.get('ip')
             self.m_dict_ret['line'] = request.GET.get('line')  # 该参数用于转换得到交换机对应的网口
         else:
             return HttpResponse()
 
-        if self.m_dict_ret['ip'] in self.m_dict_map:
+        if self.m_dict_ret['ip'] in get_switch_map():
             self.m_dict_ret['type'] = 'switch'
         else:
             self.m_dict_ret['type'] = 'host'
 
         if self.has_cache():  # 检查是否有缓存数据可用。缓存可能导致数据不更新，需要删除缓存文件以让程序重新获得数据
             json_chart_info = self.read_cache()
+            print '使用缓存数据', json_chart_info
         else:
             json_chart_info = self.new_info()
             self.add_cache(json_chart_info)
