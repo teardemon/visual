@@ -94,6 +94,8 @@ def getDataEchart(dDataEchart, sServerRoom, sLine, fUsedBand, iTotalLineBand, dE
 
 
 def getOtherUseBand(dOtherUsedBand, sServerRoom, iTotalServerUsedBand, fTopUsed):
+    # str_log='机房: {0} 机房已用: {1} 机房Top:{2}'.format(Transcoding(sServerRoom), iTotalServerUsedBand, fTopUsed)
+    # ExecManagerFunc('log', 'Log',str_log,'debug.log')
     iOther = int(iTotalServerUsedBand - fTopUsed)
     if iOther < 0:
         iOther = 0
@@ -138,8 +140,6 @@ def GetDataEchart(jIDCTraff, jIPTop):
             dAllIPInfo[sIP] = dServerInfo
             # 该机房的流量使用top10带宽用量总和
             fTopUsed += fTraffic
-        else:
-            fTopUsed = 0
         fTotalTopUsed += fTopUsed  # 所有机房top 10 的流量，用于计算出其他ip的使用量
 
         iTotalServerUsedBand = 0
@@ -167,6 +167,10 @@ def AddOuterItem(dDataEchart, dOtherUsedBand):
         return {}
     for sServerRoom in dDataEchart:
         for sLine in dDataEchart[sServerRoom]:
-            dDataEchart[sServerRoom][sLine]['outer']['other'] = dOtherUsedBand[sServerRoom]['other']
+            dDataEchart[sServerRoom][sLine]['outer']['other'] = {
+                'usage': 'other',
+                'traffic': dOtherUsedBand[sServerRoom]['other'],
+                'ip': 'other',
+            }  # 每个机房的各线路外环都是相同的：这个机房的top信息和top10以外的other信息
             dDataEchart[sServerRoom][sLine]['used'] = dOtherUsedBand[sServerRoom]['used']
     return dDataEchart

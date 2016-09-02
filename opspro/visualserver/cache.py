@@ -19,7 +19,7 @@ def CacheQuery():
     jIPTop = query.GetIPTop()
     if not jIPTop:
         # 这里需要追加报警
-        ExecManagerFunc('log', 'Log', '机房 所有 Top10流量为空', 'status/error')
+        ExecManagerFunc('log', 'Log', '机房 所有 Top10流量为空，请求超时可能导致该问题', 'status/error')
         ExecManagerFunc('alert', 'Alert', '机房 所有 Top10流量为空', [YouZeShun])
 
     dDataEchart, dOtherUsedBand = query.GetDataEchart(jIDCTraff, jIPTop)
