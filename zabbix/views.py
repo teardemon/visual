@@ -58,7 +58,10 @@ class CChart(View, spider.CSpider):
                 str_url = dict_item['Traffic on interface eth0']
                 return str_url
             else:
-                pass
+                str_msg_alert = '{0}通过接口查询关键字"{1}"没能在zabbix接口中获得关于zabbix流量图的url信息'.format(self.m_dict_ret['ip'],
+                                                                                          'Traffic on interface eth0')
+                ExecManagerFunc('log','Log',str_msg_alert,'data/log/error')
+                ExecManagerFunc('alert', 'Alert', str_msg_alert, [QiangYao, YouZeShun])
         return ''
 
     def get_switch_chart_url(self, list_ret):
@@ -160,7 +163,6 @@ class CChart(View, spider.CSpider):
 
     def get(self, request, *args, **kwargs):
         self.clear()  # 清理上次执行时遗留的数据
-        ExecManagerFunc('alert', 'Alert', '测试', 8766)
         if request.method == 'GET':  # and request.is_ajax():
             self.m_dict_ret['ip'] = request.GET.get('ip')
             self.m_dict_ret['line'] = request.GET.get('line')  # 该参数用于转换得到交换机对应的网口
@@ -174,7 +176,7 @@ class CChart(View, spider.CSpider):
 
         if self.has_cache():  # 检查是否有缓存数据可用。缓存可能导致数据不更新，需要删除缓存文件以让程序重新获得数据
             json_chart_info = self.read_cache()
-            print '使用缓存数据', json_chart_info
+            # print '使用缓存数据', json_chart_info
         else:
             json_chart_info = self.new_info()
             self.add_cache(json_chart_info)

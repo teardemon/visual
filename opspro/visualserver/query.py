@@ -71,7 +71,7 @@ def getServerRoomTop(sServerRoom, jIPTop):
         # print sServerRoom, '使用缓存数据', ExecManagerFunc('cache', 'all')
         str_error = '机房: %s 没有Top10数据,已经使用了缓存数据' % Transcoding(sServerRoom)  # 按照utf-8进行编码
         ExecManagerFunc('alert', 'Alert', str_error, YouZeShun, 60 * 60)
-        ExecManagerFunc('log', 'WriteLog', str_error, 'status/error')
+        ExecManagerFunc('log', 'Log', str_error, 'status/error')
     else:
         str_error = '机房: %s 没有Top10数据,连缓存都没有' % Transcoding(sServerRoom)  # 按照utf-8进行编码
         ExecManagerFunc('alert', 'Alert', str_error, YouZeShun, 60 * 60)

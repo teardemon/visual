@@ -13,13 +13,13 @@ def CacheQuery():
     jIDCTraff = query.GetIDCTraff()
     if not jIDCTraff:
         # 这里需要追加报警
-        ExecManagerFunc('log', 'WriteLog', 'IDC线路流量不允许为空', 'status/error')
+        ExecManagerFunc('log', 'Log', 'IDC线路流量不允许为空', 'status/error')
         ExecManagerFunc('alert', 'Alert', 'IDC线路流量不允许为空', [YouZeShun])
 
     jIPTop = query.GetIPTop()
     if not jIPTop:
         # 这里需要追加报警
-        ExecManagerFunc('log', 'WriteLog', '机房 所有 Top10流量为空', 'status/error')
+        ExecManagerFunc('log', 'Log', '机房 所有 Top10流量为空', 'status/error')
         ExecManagerFunc('alert', 'Alert', '机房 所有 Top10流量为空', [YouZeShun])
 
     dDataEchart, dOtherUsedBand = query.GetDataEchart(jIDCTraff, jIPTop)

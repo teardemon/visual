@@ -35,7 +35,7 @@ class CRWText():
         self.WriteFile(sText, sCacheName, 'w+')
 
     # 写日志默认是追加文本内容
-    def WriteLog(self, sText, sFilePath, sMode='a+'):
+    def Log(self, sText, sFilePath, sMode='a+'):
         # 千万不要写if not sText,否则数字0和0.0都不能写！
         if not sFilePath:
             return
@@ -81,4 +81,4 @@ class CRWText():
 
 if __name__ == '__main__':
     oCRWText = CRWText('/tmp')
-    oCRWText.WriteLog('日志带日期且自动换行', 'log')
+    oCRWText.Log('日志带日期且自动换行', 'log')
