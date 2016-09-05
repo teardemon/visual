@@ -1,0 +1,136 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul id="sidebar_menu" class="sidebar-nav">
+                <li class="sidebar-brand"><a id="menu-toggle" href="#">操作面板<span id="main_icon"
+                                                                                 class="glyphicon glyphicon-align-justify"></span></a>
+                </li>
+            </ul>
+            <ul class="sidebar-nav" id="sidebar">
+                <!--
+                需要替换掉&nbsp的写法，用标签宽度来占位置
+                -->
+                <input id="toggle-traffic" type="checkbox" checked data-toggle="toggle"
+                       data-width="100%"
+                       data-on="&nbsp;&nbsp;&nbsp;&nbsp;自动刷新数据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-play'></i>"
+                       data-off="停止刷新数据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-pause'></i>">
+                <li><a href="http://192.168.165.200:82/custom/output/?chart=bar&key=adsl&timeout=5">adsl/光纤流量图<span
+                        class="sub_icon glyphicon glyphicon-link"></span></a></li>
+            </ul>
+            {#            <ul class="sidebar-nav sidebar-bottom">#}
+            {#                <li><a>Link1<span class="sub_icon glyphicon glyphicon-link"></span></a></li>#}
+            {#                <li><a>Link2<span class="sub_icon glyphicon glyphicon-link"></span></a></li>#}
+            {#            </ul>#}
+        </div>
+
+        <!-- Page content -->
+        <div id="page-content-wrapper">
+            <!-- Keep all page content within the page-content inset div! -->
+            {% block notification %}
+                {% for notification in notifications %}
+                    <div class="alert alert-warning alert-dismissible fade in" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <div id="notify">{{ notification.content }}</div>
+                    </div>
+                {% endfor %}
+            {% endblock notification %}
+
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog custom-width">
+                    <div class="modal-content">
+                        <div class="modal-header yzs-modal-header">
+                            <button class='yzs-button' type="button" data-dismiss="modal"
+                                    aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">img标签将取代这里</div>
+                    </div>
+                    <!-- /.modal-content 用来把 <div> 的内容识别为模态框。-->
+                </div>
+                <!-- /.modal -->
+            </div>
+            <!--在改区域中添加元素-->
+            <div id="yzs-update-time"></div>
+            <div id='drawChart-area'></div>
+            <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+            <div id="main" style="width: 100%;height:1000px;"></div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script src="/static/public/jquery/jquery.js"></script>
+    <!--模拟框-->
+    <script src="/static/public/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="/static/public/jquery/1.11.3/jquery.min.js"></script>
+    <!--必须先载入jquery再载入bootstrap-switch.js-->
+    <script src="/static/public/bootstrap/bootstrap-toggle.js"></script>
+    <!--右下角的工具栏-->
+    <script>
+        {% if not on_hook %}
+            window.setInterval(AjaxDraw, 30000);
+        {% endif %}
+    </script>
+    <script>
+        //控制面板侧滑效果
+        $("#menu-toggle").click(function (e) {
+            e.preventDefault();
+            $("#wrapper").toggleClass("active");
+        });
+    </script>
+    <script src="/static/public/echarts/3.1.10/echarts.js"></script>
+    <script src="/static/adsl/js/adsl.js"></script>
+    <script type="text/javascript">
+        //根据条目设置宽度
+        function SetHeight(jData) {
+            var iLen = 0;
+            for (i in  jData['result']['data']) {
+                iLen++
+            }
+            iHeight = iLen * 120;
+            console.log(iHeight);
+            document.getElementById("main").style.height = iHeight + "px";
+        }
+
+        // 基于准备好的dom，初始化echarts实例
+        function DynamicDrawChart() {
+            $.ajax({
+                // url: '/zabbix/chart/' + sZabbixIP,
+                url: '/custom/output/',
+                data: "key=adsl",// data: '{ip:' + sZabbixIP + ',line:' + sTagID + '}',
+                type: 'GET',
+                success: function (sData) {//complete() will always get called no matter if the ajax call was successful or not
+                    jData = JSON.parse(sData);
+                    SetHeight(jData);
+                    if (jData['success'] == 1) {
+                        drawChart(jData['result']['data'], 'main');
+                    } else {
+                        console.log('后端没能给予正确的数据，提示：' + jData['tip']);
+                    }
+                }
+            })
+        }
+        DynamicDrawChart()
+    </script>
+    <script>
+        {% if int_setTimeout %}
+            window.setInterval(DynamicDrawChart, {{ int_setTimeout }});
+        {% endif %}
+    </script>
+{% endblock %}
+
+{% block styles %}
+    <title>idc各线路流量</title>
+    <link href="/static/public/bootstrap/bootstrap-toggle.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/static/public/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="/static/public/bootstrap/3.3.5/css/bootstrap-switch.css"/>
+    <!--右下角的工具栏-->
+    <link type="text/css" rel="stylesheet" href="/static/idc/css/wrapper.css"/>
+{% endblock styles %}

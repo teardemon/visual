@@ -10,25 +10,26 @@ html5 的简化版本
 </head>
 
 <body>
-    <!--
-    头部
-    -->
-    <header>
-        {% block nav %}
-        {% endblock nav %}
-    </header>
+<!--
+头部
+-->
+<header>
+    {% block nav %}
+    {% endblock nav %}
+</header>
 
-    <div>
-        {% block content %}
-        {% endblock content %}
-    </div>
+<div>
+    {% block content %}
+    {% endblock content %}
+</div>
 
-    <footer>
-        {% block footer %}
-        {% endblock footer %}
-    </footer>
+<footer>
+    {% block footer %}
+    {% endblock footer %}
+</footer>
 
-    {% block script %}
-    {% endblock script %}
+
 </body>
+{% block script %}
+{% endblock script %}
 </html>
