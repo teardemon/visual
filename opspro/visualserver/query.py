@@ -68,13 +68,13 @@ def getServerRoomTop(sServerRoom, jIPTop):
     elif ExecManagerFunc('cache', 'has_key', sServerRoom):
         sServerRoomTop = ExecManagerFunc('cache', 'key', sServerRoom)
         listServerRoomTop = eval(sServerRoomTop)
-        # print sServerRoom, '使用缓存数据', ExecManagerFunc('cache', 'all')
         str_error = '机房: %s 没有Top10数据,已经使用了缓存数据' % Transcoding(sServerRoom)  # 按照utf-8进行编码
-        ExecManagerFunc('alert', 'Alert', str_error, YouZeShun, 60 * 60)
-        ExecManagerFunc('log', 'Log', str_error, 'status/error')
+        # ExecManagerFunc('alert', 'Alert', str_error, YouZeShun, 60 * 60)
+        ExecManagerFunc('log', 'Log', str_error, 'error/level3')
     else:
         str_error = '机房: %s 没有Top10数据,连缓存都没有' % Transcoding(sServerRoom)  # 按照utf-8进行编码
-        ExecManagerFunc('alert', 'Alert', str_error, YouZeShun, 60 * 60)
+        # ExecManagerFunc('alert', 'Alert', str_error, YouZeShun, 60 * 60)
+        ExecManagerFunc('log', 'Log', str_error, 'error/level3')
         listServerRoomTop = []
     return listServerRoomTop
 

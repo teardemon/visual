@@ -1,8 +1,8 @@
+!!python/unicode '10.109.137.251': {武汉联通: !!python/unicode 'GigabitEthernet1/0/22'}
 !!python/unicode '112.73.64.1': {常州电信: !!python/unicode 'TenGigabitEthernet1/32'}
 !!python/unicode '113.106.204.126': {惠州电信2: !!python/unicode 'Ten-GigabitEthernet1/0/49'}
 !!python/unicode '113.106.204.130': {惠州电信1: !!python/unicode 'Ten-GigabitEthernet1/0/49'}
-!!python/unicode '116.211.88.2': {武汉电信: !!python/unicode 'GigabitEthernet1/0/23',
-  武汉联通: !!python/unicode 'GigabitEthernet1/0/22'}
+!!python/unicode '116.211.137.1': {武汉电信: !!python/unicode 'XGigabitEthernet0/0/1'}
 !!python/unicode '119.188.15.160': {济南联通2: !!python/unicode 'GigabitEthernet0/24'}
 !!python/unicode '121.201.102.1': {中山电信: !!python/unicode 'TenGigabitEthernet1/1',
   中山联通: !!python/unicode 'TenGigabitEthernet1/3'}

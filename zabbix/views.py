@@ -35,6 +35,7 @@ class CChart(View, spider.CSpider):
             'type': '',  # host or switch
             'ip': '',
             'line': '',  # 线路，不同线路能使用一个交换机ip，所以单靠交换机ip无法区分线路
+            'info': '',  # zabbix查询得到的信息
         }
 
     # 判断一个ip返回的信息是交换机所有的
@@ -46,9 +47,11 @@ class CChart(View, spider.CSpider):
         if str_ip in get_switch_map():
             str_api_url_zabbix = self.m_zabbix_chart_full.format(str_ip, 'switch')
             self.m_dict_ret['type'] = 'switch'
+            self.m_dict_ret['info'] = str_api_url_zabbix
         else:
             str_api_url_zabbix = self.m_zabbix_chart_full.format(str_ip, 'host')
             self.m_dict_ret['type'] = 'host'
+            self.m_dict_ret['info'] = str_api_url_zabbix
         json_info = self.ReadJson(str_api_url_zabbix)
         return json_info
 
@@ -58,10 +61,11 @@ class CChart(View, spider.CSpider):
                 str_url = dict_item['Traffic on interface eth0']
                 return str_url
             else:
-                str_msg_alert = '{0}通过接口查询关键字"{1}"没能在zabbix接口中获得关于zabbix流量图的url信息'.format(self.m_dict_ret['ip'],
-                                                                                          'Traffic on interface eth0')
-                ExecManagerFunc('log','Log',str_msg_alert,'data/log/error')
-                ExecManagerFunc('alert', 'Alert', str_msg_alert, [QiangYao, YouZeShun])
+                str_msg_alert = '{0}通过接口查询关键字"{1}"没能在zabbix接口中获得关于zabbix流量图的url信息.可能原因:\n1.这个IP是缓存配置ip_to_interface.yaml中不存在的新交换机IP,通过删除缓存解决。\n2.这是一个配置不标准的服务器'.format(
+                    self.m_dict_ret['ip'],
+                    'Traffic on interface eth0')
+                ExecManagerFunc('log', 'Log', str_msg_alert, 'error/level2')
+                ExecManagerFunc('alert', 'Alert', str_msg_alert, [YouZeShun])
         return ''
 
     def get_switch_chart_url(self, list_ret):
@@ -102,10 +106,19 @@ class CChart(View, spider.CSpider):
         :return: None。仅仅从demo url中提取出 graph id 保存起来
         '''
         if not str_traffic_url_demo:
+            str_error_msg = '不能获得IP为 {0} 的zabbix的graphid,因为没匹配成功。被匹配的对象: {1} 请检查该ip是否能从接口获得数据 {2}'.format(
+                self.m_dict_ret['ip'], str_traffic_url_demo, self.m_dict_ret['info'])
+            ExecManagerFunc('log', 'Log', str_error_msg, 'error/level2')
+            ExecManagerFunc('alert', 'Alert', str_error_msg, [YouZeShun])
             return ''
         object_ret = re.search('(?<=graphid=)\d+', str_traffic_url_demo)
         if object_ret:
             self.m_dict_ret['traffic']['graphid'] = object_ret.group(0)
+        if not self.m_dict_ret['traffic']['graphid']:
+            str_error_msg = '不能获得IP为 {0} 的zabbix的graphid,因为没匹配成功。被匹配的对象: {1} 请检查该ip是否能从接口获得数据 {2}：'.format(
+                self.m_dict_ret['ip'], str_traffic_url_demo, self.m_dict_ret['info'])
+            ExecManagerFunc('log', 'Log', str_error_msg, 'error/level2')
+            ExecManagerFunc('alert', 'Alert', str_error_msg, [YouZeShun])
 
     def assemble(self):
         str_graph_id = self.m_dict_ret['traffic']['graphid']

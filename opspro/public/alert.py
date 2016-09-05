@@ -89,7 +89,7 @@ class CAlertManager(object):
                                                                                                     IMNumber)
             AlertLinux(sMsg, YouZeShun)
             return
-        sAlertMsg = 'IP: {0} {1}'.format(sIP, AlertMsg)
+        sAlertMsg = '【来自:{0}】 {1}'.format(sIP, AlertMsg)
         self.UpdateRecord(iInterval)  # 删除10分钟以前尝试的报警记录
         sNameRegister = str(IMNumber) + sAlertMsg  # 相同的报警是发给相同火星号的相同消息
         if self.IsReAlert(sNameRegister):

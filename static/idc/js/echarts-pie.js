@@ -40,18 +40,10 @@ function FormatOuter(jDataValue) {
         //用途:<br/>
         fValue = jDataValue.outer[sIP]['traffic'];
         sUsage = jDataValue.outer[sIP]['usage'];
-        if (fValue != 0 && fValue) {//注意机房统计那个图的格式
-            fValue = fValue.toFixed(2);//iValue必须是非０浮点数
-            fPercent = (fValue / jDataValue.used * 100).toFixed(2);
-            sName = '用途:' + sUsage + '<br/>带宽:' + fValue + ' Mb/s<br/>IP:' + sIP + '<br/>占机房已用带宽百分比:' + fPercent + ' %';
-            aOuter.push({'name': sName, 'value': fValue});
-        } else {
-            //机房总计是没有TOP10的
-            fValue = fValue.toFixed(2);//iValue必须是非０浮点数
-            fPercent = (fValue / jDataValue.used * 100).toFixed(2);
-            sName = '用途:' + sUsage + '<br/>带宽:0  Mb/s<br/>IP:' + sIP + '<br/>占机房已用带宽百分比:' + fPercent + ' %';
-            aOuter.push({'name': sName, 'value': fValue});
-        }
+        fValue = fValue.toFixed(2);//iValue必须是非０浮点数
+        fPercent = (fValue / jDataValue.used * 100).toFixed(2);
+        sName = '用途:' + sUsage + '<br/>带宽:' + fValue + ' Mb/s<br/>IP:' + sIP + '<br/>占机房已用带宽百分比:' + fPercent + ' %';
+        aOuter.push({'name': sName, 'value': fValue});
     }
     return aOuter
 }
