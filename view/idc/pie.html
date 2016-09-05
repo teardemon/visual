@@ -14,35 +14,6 @@
             window.setInterval(AjaxDraw, 30000);
         {% endif %}
     </script>
-    <style type="text/css">
-
-        /*改变最大长宽，未达到最大长宽的时候是自适应的*/
-        #myModal .modal-body {
-            max-height: 840px;
-        }
-
-        /*这个css所使用的class是自定义的！*/
-        .custom-width {
-            width: 1050px; /* either % (e.g. 60%) or px (400px) */
-        }
-
-        h3 {
-            margin: 0px;
-            padding: 0px;
-        }
-
-        .yzs-modal-header {
-            margin: 0px;
-            padding: 0px;
-            height: 30px;
-        }
-
-        .yzs-button {
-            float: right;
-            width: 50px;
-        }
-
-    </style>
 {% endblock script %}
 
 
@@ -55,12 +26,17 @@
 
 
 {% block content %}
-    <div class="alert alert-warning alert-dismissible fade in" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <strong>通知：</strong> 武汉联通机房数据接口有bug，无法显示图形，正在修复中.
-    </div>
+    {% block notification %}
+        {% for notification in notifications %}
+            <div class="alert alert-warning alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div id="notify">{{ notification.content }}</div>
+            </div>
+        {% endfor %}
+    {% endblock notification %}
+
     <!-- 模态框（Modal） -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
          aria-labelledby="myModalLabel" aria-hidden="true">

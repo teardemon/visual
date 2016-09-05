@@ -15,10 +15,15 @@ from opspro.public.define import *
 def Init(sLogPath, sRootPath):
     SetGlobalManager('rootpath', sRootPath)  # 脚本的根路径，用于寻找资源
     SetGlobalManager('log', rwtext.CRWText('{0}/{1}'.format(sLogPath, '/data/log')))
-    SetGlobalManager("timer", timerctrl.CTimerManager())
     SetGlobalManager("alert", alert.CAlertManager())
     SetGlobalManager("cache", keycache.CKeyStore('{0}/{1}'.format(sLogPath, '/data/cache/top.cache')))
 
+def IsOpen():
+    SetGlobalManager("timer", timerctrl.CTimerManager())
+    if not GetGlobalManager('timer'):
+        return 0
+    return 1
 
 def Start():
-    cache.PeriodCache()
+    if IsOpen():
+        cache.PeriodCache()

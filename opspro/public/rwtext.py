@@ -7,7 +7,6 @@
 '''
 from define import *
 import path
-import os
 
 
 class CRWText():

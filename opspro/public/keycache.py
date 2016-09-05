@@ -13,7 +13,6 @@ https://pymotw.com/2/anydbm/
 # 用途：提供键值对的缓存
 '''
 import anydbm
-import unicodedata
 from define import *
 import os
 

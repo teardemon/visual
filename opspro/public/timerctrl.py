@@ -14,13 +14,13 @@ class CTimerManager(threading.Thread):
 		self.m_TimerDict={} #该类对这个字典进行轮询
 		self.m_bStop=False
 		self.start()
-		
-		
+
+
 	#每秒都检查这个字典
 	def run(self):
 		while True:
 			if self.m_bStop:
-				break 
+				break
 			time.sleep(1)
 			self.CheckTimeOut()
 
@@ -60,4 +60,12 @@ class CTimerManager(threading.Thread):
 				iEndTime=curtime+iDelay
 				self.m_TimerDict[sFlag]=(iEndTime,iDelay,cbfunc,bPeriod)
 			cbfunc()
-			
+
+if __name__=='__main__':
+	def Hi():
+		print '回调方法Hi已执行'
+
+	def Demo1():
+		oTimerManager = CTimerManager()
+		print '将5秒后执行回调方法'
+		oTimerManager.Register(Hi, 5, 'test.hi')
