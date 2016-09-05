@@ -13,12 +13,12 @@
                 <!--
                 需要替换掉&nbsp的写法，用标签宽度来占位置
                 -->
+                <li><a href="http://127.0.0.1/">adsl/光纤流量图<span
+                        class="sub_icon glyphicon glyphicon-link"></span></a></li>
                 <input id="toggle-traffic" type="checkbox" checked data-toggle="toggle"
                        data-width="100%"
                        data-on="&nbsp;&nbsp;&nbsp;&nbsp;自动刷新数据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-play'></i>"
                        data-off="停止刷新数据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-pause'></i>">
-                <li><a href="http://192.168.165.200:82/custom/output/?chart=bar&key=adsl&timeout=5">adsl/光纤流量图<span
-                        class="sub_icon glyphicon glyphicon-link"></span></a></li>
             </ul>
             {#            <ul class="sidebar-nav sidebar-bottom">#}
             {#                <li><a>Link1<span class="sub_icon glyphicon glyphicon-link"></span></a></li>#}
@@ -29,16 +29,12 @@
         <!-- Page content -->
         <div id="page-content-wrapper">
             <!-- Keep all page content within the page-content inset div! -->
-            {% block notification %}
-                {% for notification in notifications %}
-                    <div class="alert alert-warning alert-dismissible fade in" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <div id="notify">{{ notification.content }}</div>
-                    </div>
-                {% endfor %}
-            {% endblock notification %}
+            <div class="alert alert-warning alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div id="notify">目前没有可用,当前页面为Demo</div>
+            </div>
 
             <!-- 模态框（Modal） -->
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
