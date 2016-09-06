@@ -43,5 +43,6 @@ def CacheQuery():
 # 周期性地调用缓存代码
 def PeriodCache():
     CacheQuery()
+    print '－－－－－－－－－－－－－启动服务'
     Remove_Call_Out("periodcache")
     Call_Out(PeriodCache, 30, "periodcache")  # 为了不重名，使用文件名作为注册名

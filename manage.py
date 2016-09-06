@@ -14,6 +14,6 @@ if __name__ == "__main__":
 
     from django.core.management import execute_from_command_line
 
-    execute_from_command_line(sys.argv)
     if sys.argv[1] == 'runserver':
         start_opspro()
+    execute_from_command_line(sys.argv)  # 这步会阻塞
