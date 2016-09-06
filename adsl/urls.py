@@ -1,9 +1,11 @@
 # <coding:utf-8>
 from django.conf.urls import patterns, url
-from adsl.views import CADSLTraffic
+from adsl.views import *
 
 urlpatterns = patterns('',
                        url(r'^$', CADSLTraffic.as_view(), {'on_hook': False}, name='index'),
+                       url(r'^/input$', CADSLInput.as_view(), {'on_hook': False}, name='index'),
+                       url(r'^/query$', CADSLQuery.as_view(), {'on_hook': False}, name='index'),
                        # url(r'^on_hook/line_traffic$', views.COnHookLineTraffic.as_view(), {'on-hook': True}, name='index'),
                        )
 

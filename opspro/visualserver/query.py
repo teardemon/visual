@@ -89,6 +89,7 @@ def getDataEchart(dDataEchart, sServerRoom, sLine, fUsedBand, iTotalLineBand, dE
         },
         'outer': dEchartOuter,
         'inner_name': sInnerName,
+        'server_room': sServerRoom,  # 线路所属的机房名称。用于排序
     }
     return dDataEchart
 
@@ -162,6 +163,36 @@ def GetDataEchart(jIDCTraff, jIPTop):
     return dDataEchart, dOtherUsedBand
 
 
+def GetMax(dOuter, dOrder):
+    '''
+    每次得到一个不在dOrder中的dOuter的最大流量值，加入dOrder
+    @param dOuter:
+    @param dOrder:
+    @return:
+    '''
+    dBig = {}  # 外环中值最大的字典
+    iLittle = iBig = 0
+    for sIP, dData in dOuter.iteritems():
+        iLittle = dData['traffic']
+        if iLittle >= iBig and not sIP in dOrder:  # 因为有０值，必须为>=
+            iBig = iLittle
+            dBig = {'ip': sIP, 'data': dData}
+    dOrder[dBig['ip']] = dBig['data']
+    return dOrder
+
+
+def OuterOrder(dOuter):
+    '''
+    为外环的top按照流量的大小进行排序
+    @return:
+    '''
+    dOrder = collections.OrderedDict()
+    iTime = len(dOuter)
+    for i in range(iTime):
+        dOrder = GetMax(dOuter, dOrder)
+    return dOrder
+
+
 def AddOuterItem(dDataEchart, dOtherUsedBand):
     if not dDataEchart or not dOtherUsedBand:
         return {}
@@ -173,5 +204,36 @@ def AddOuterItem(dDataEchart, dOtherUsedBand):
                 'traffic': dOtherUsedBand[sServerRoom]['other'],
                 'ip': 'other',
             }  # 每个机房的各线路外环都是相同的：这个机房的top信息和top10以外的other信息
+            dDataEchart[sServerRoom][sLine]['outer'] = OuterOrder(dDataEchart[sServerRoom][sLine]['outer'])
             dDataEchart[sServerRoom][sLine]['used'] = dOtherUsedBand[sServerRoom]['used']
     return dDataEchart
+
+
+def InitDict():
+    '''
+    按照需要的顺序，先初始化一个字典。这样键名是有序的
+    @return:
+    '''
+    dTmp = collections.OrderedDict()
+    for sLine in idcconf.LIST_LINE_SORT:
+        dTmp[sLine] = {}
+    return dTmp
+
+
+def LineOrder(dDataEchart):
+    '''
+    为Echart的数据进行排序
+    @param dDataEchart:
+    @return:
+    '''
+    dOrder = InitDict()
+    for sServer, dLineInfo in dDataEchart.iteritems():
+        for sLine, dInfo in dLineInfo.iteritems():
+            sLine = Transcoding(sLine)
+            if not sLine in dOrder:
+                sMsg = '线路的名称有所变化，排序列表中没有与"{0}"对应的键'.format(sLine)
+                ExecManagerFunc('alert', 'Alert', sMsg, YouZeShun)
+                ExecManagerFunc('log', 'Log', sMsg, 'error/level2')
+                continue
+            dOrder[sLine] = dInfo
+    return dOrder

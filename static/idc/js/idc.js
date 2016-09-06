@@ -23,6 +23,13 @@ function IsUpdate() {
     }
 }
 
+/*用途：为线路的显示顺序进行排序
+ *程序-黄献波(9297) 2016-9-6 16:49:12
+ *把银联联通，移动 和 香港 放机房总计前面，佛山、中山 放最前面
+ * */
+function Sort(jEchartData) {
+}
+
 // 异步加载数据
 function AjaxDraw() {
     if (!IsUpdate()) {
@@ -39,11 +46,10 @@ function AjaxDraw() {
             jEchartData = jData['data'];
             sDate = jData['date'];
             ShowTime(sDate);
-            for (sServer in jEchartData) {
-                for (sLine in jEchartData[sServer]) {
-                    tagAdd(sLine);
-                    drawChart(jEchartData[sServer][sLine], sLine, 3);
-                }
+            // jEchartData = Sort(jEchartData);
+            for (sLine in jEchartData) {
+                tagAdd(sLine);
+                drawChart(jEchartData[sLine], sLine, 3);
             }
         }
     });

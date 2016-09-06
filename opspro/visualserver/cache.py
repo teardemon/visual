@@ -24,8 +24,12 @@ def CacheQuery():
 
     dDataEchart, dOtherUsedBand = query.GetDataEchart(jIDCTraff, jIPTop)
     dDataEchart = query.AddOuterItem(dDataEchart, dOtherUsedBand)
+    dDataEchart = query.LineOrder(dDataEchart)  # 为线路的先后顺序进行排序
     if not dDataEchart:
+        ExecManagerFunc('alert', 'Alert', 'opspro没能生成echart数据！idc流量图将无法刷新！', 8766)
+        ExecManagerFunc('log', 'Log', 'opspro没能生成echart数据！idc流量图将无法刷新！', 'error/level1')
         return
+
     # json.dumps()将原本的Unicode字符拆分成一个个单独的ASCII码，ensure_ascii=False将不拆分.
     # 这样能以中文字符的形式将数据写到文本中，但是数据由于不是python能识别的编码，在未知情况下会报错
     dDataCache = {
