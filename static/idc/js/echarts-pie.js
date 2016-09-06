@@ -40,9 +40,10 @@ function FormatOuter(jDataValue) {
         //用途:<br/>
         fValue = jDataValue.outer[sIP]['traffic'];
         sUsage = jDataValue.outer[sIP]['usage'];
+        sUser = jDataValue.outer[sIP]['user'];
         fValue = fValue.toFixed(2);//iValue必须是非０浮点数
         fPercent = (fValue / jDataValue.used * 100).toFixed(2);
-        sName = '用途:' + sUsage + '<br/>带宽:' + fValue + ' Mb/s<br/>IP:' + sIP + '<br/>占机房已用带宽百分比:' + fPercent + ' %';
+        sName = '用途:' + sUsage + '<br/>使用人:'+sUser+'<br/>带宽:' + fValue + ' Mb/s<br/>IP:' + sIP + '<br/>占机房已用带宽百分比:' + fPercent + ' %';
         aOuter.push({'name': sName, 'value': fValue});
     }
     return aOuter
@@ -213,10 +214,10 @@ function GetOption(jDataValue, sTagID, Theme) {
                 itemStyle: {
                     normal: { //没有聚焦时的样式
                         label: {
-                            show: false, //ItemStyleShow //因为溢出div的设置还不会做，所以暂时用false
+                            show: false //ItemStyleShow //因为溢出div的设置还不会做，所以暂时用false
                         },
                         labelLine: {
-                            show: bItemStyleShow, //
+                            show: bItemStyleShow //
                         }
                     },
                     emphasis: { //聚焦以后的样式

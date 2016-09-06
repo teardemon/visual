@@ -169,6 +169,7 @@ def AddOuterItem(dDataEchart, dOtherUsedBand):
         for sLine in dDataEchart[sServerRoom]:
             dDataEchart[sServerRoom][sLine]['outer']['other'] = {
                 'usage': 'other',
+                'user': 'other',
                 'traffic': dOtherUsedBand[sServerRoom]['other'],
                 'ip': 'other',
             }  # 每个机房的各线路外环都是相同的：这个机房的top信息和top10以外的other信息
