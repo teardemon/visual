@@ -4,3 +4,4 @@ pie.json
 *.pyc
 *.*~
 *.swp
+*.cache

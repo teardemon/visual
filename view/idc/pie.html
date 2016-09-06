@@ -10,6 +10,16 @@
     <script src="/static/public/bootstrap/bootstrap-toggle.js"></script>
     <script src="/static/public/echarts/3.1.10/echarts.js"></script>
     <script src="/static/idc/js/echarts-pie.js"></script>
+    <script>
+        //使用滑动按钮的状态为'刷新变量'赋值
+        var bSwitchTraffic = $('#toggle-traffic').prop('checked');
+        $(function () {
+            $('#toggle-traffic').change(function () {
+                bSwitchTraffic = $(this).prop('checked');
+                console.log(bSwitchTraffic);
+            })
+        })
+    </script>
     <!--右下角的工具栏-->
     <script src="/static/idc/js/idc.js"></script>
     <script>
@@ -48,6 +58,7 @@
                                                                                  class="glyphicon glyphicon-align-justify"></span></a>
                 </li>
             </ul>
+            <!--默认为选中状态 checked ,会刷新数据-->
             <input id="toggle-traffic" type="checkbox" checked data-toggle="toggle"
                    data-width="100%"
                    data-on="&nbsp;&nbsp;&nbsp;&nbsp;自动刷新数据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-play'></i>"

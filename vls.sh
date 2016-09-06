@@ -8,8 +8,8 @@ Created on 2016-9-5
 '''
 Stop(){
 	if [ -z "$num" ];then
-    echo '需要端口号'
-    exit 0
+		echo '需要端口号'
+		exit 0
 	fi
 
 	#第一个.*表示manage.py所在的路径
@@ -19,8 +19,8 @@ Stop(){
 
 Start(){
 	if [ -z "$num" ];then
-    	echo '需要端口号'
-    	exit 0
+		echo '需要端口号'
+		exit 0
 	fi
 
 	tmp=$(netstat -anp|grep tcp|cut -c 21-42|cut -d ':' -f 2|grep $num)
@@ -31,7 +31,7 @@ Start(){
 		exit 0
 	fi
 	done
-	python manage.py runserver 0.0.0.0:$num &2>1 start.log
+	python manage.py runserver 0.0.0.0:$num &> "${basePath}/data/log/django.log"
 }
 
 Tip(){
@@ -42,7 +42,11 @@ Tip(){
 	重启服务:bash vls.sh restart 80"
 }
 
-main(){
+Init(){
+	basePath=$(cd `dirname $0`;pwd)
+}
+
+Main(){
 	mode=$1
 	num=$2
 	case $mode in
@@ -64,4 +68,5 @@ main(){
 	esac
 } 
 
-main $@
+Init
+Main $@

@@ -16,11 +16,10 @@ function ShowTime(sDate) {
 
 //当按钮被关闭的时候返回不刷新数据的信号
 function IsUpdate() {
-    var sButtonStatus = $("#yzs-data-button i").html();
-    if (sButtonStatus == 'play_arrow') {
-        return 0
-    } else {
+    if (bSwitchTraffic) {
         return 1
+    } else {
+        return 0
     }
 }
 
