@@ -53,16 +53,16 @@ AjaxDraw();
 
 
 //<li><a class="btn-floating red" id="yzs-data-button"><i class="material-icons">pause</i></a></li>
-$("#yzs-data-button").on('click', function () {
-    //id为yzs-data-button的子元素i
-    var sButtonStatus = $("#yzs-data-button i").html();
-    if (sButtonStatus == 'pause') {
-        $("#yzs-data-button i").html('play_arrow');
-        $("#yzs-data-button").removeClass('green');
-        $("#yzs-data-button").addClass('red');
-    } else {
-        $("#yzs-data-button i").html('pause');
-        $("#yzs-data-button").removeClass('red');
-        $("#yzs-data-button").addClass('green');
-    }
-});
+// $("#yzs-data-button").on('click', function () {
+//     //id为yzs-data-button的子元素i
+//     var sButtonStatus = $("#yzs-data-button i").html();
+//     if (sButtonStatus == 'pause') {
+//         $("#yzs-data-button i").html('play_arrow');
+//         $("#yzs-data-button").removeClass('green');
+//         $("#yzs-data-button").addClass('red');
+//     } else {
+//         $("#yzs-data-button i").html('pause');
+//         $("#yzs-data-button").removeClass('red');
+//         $("#yzs-data-button").addClass('green');
+//     }
+// });
