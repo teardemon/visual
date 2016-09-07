@@ -135,9 +135,7 @@
         DynamicDrawChart()
     </script>
     <script>
-        {% if int_setTimeout %}
-            window.setInterval(DynamicDrawChart, {{ int_setTimeout }});
-        {% endif %}
+            window.setInterval(DynamicDrawChart, 30000);
     </script>
 {% endblock %}
 

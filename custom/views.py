@@ -175,4 +175,5 @@ class COutput(CInterface):
         if not str_html:
             return HttpResponse(self.m_json_respond)
         int_timeout = self.get_timeout(request)
+        print '------------------------',int_timeout
         return render_to_response(str_html, {'int_setTimeout': int_timeout})

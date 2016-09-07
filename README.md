@@ -32,6 +32,7 @@ http://192.168.165.200:82/custom/input/?live=1&chart=bar&key=adsl&data={"10.10.1
 	chart : 选用哪种图形显示数据，当live为１时才有效
 	key 　　　访问数据的key 必选
 	data 　　数据
+	date   时间，默认是后端接收到数据的时间
 	
 数据输出链接：　http://ip:port/custom/out/
 	参数：
