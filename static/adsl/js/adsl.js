@@ -1,13 +1,13 @@
 /**
  * Created by yzs on 16-8-26.
  */
-function GetOption(jDateValue, sTagID) {
+function Rate(jDateValue) {
     var aYAxis = [];
     var aDownUsed = [];
     var aDownFree = [];
     var aUpUsed = [];
     var aUpFree = [];
-    var aSeriesData = {'up': [], 'use': []};
+
     for (var sIP in jDateValue) {
         for (var sInterface in jDateValue[sIP]) {
             sPurpose = jDateValue[sIP][sInterface]["purpose"];
@@ -30,7 +30,53 @@ function GetOption(jDateValue, sTagID) {
             aYAxis.push(sPurpose); //y坐标的刻度
         }
     }
+    var aParaOption = {
+        'down_used': aDownUsed,
+        'down_free': aDownFree,
+        'up_used': aUpUsed,
+        'up_free': aUpFree,
+        'yaxis': aYAxis
+    };
+    return aParaOption
+}
 
+function Value(jDateValue) {
+    var aYAxis = [];
+    var aDownUsed = [];
+    var aDownFree = [];
+    var aUpUsed = [];
+    var aUpFree = [];
+
+    for (var sIP in jDateValue) {
+        for (var sInterface in jDateValue[sIP]) {
+            sPurpose = jDateValue[sIP][sInterface]["purpose"];
+
+            iDownUsed = parseFloat(jDateValue[sIP][sInterface]["down_used"]).toFixed(0);
+            iDownFree = parseFloat(jDateValue[sIP][sInterface]["down_total"] - iDownUsed).toFixed(0);
+
+            iUpUsed = parseFloat(jDateValue[sIP][sInterface]["up_used"]).toFixed(0);
+            iUpFree = parseFloat(jDateValue[sIP][sInterface]["up_total"] - iUpUsed).toFixed(0);
+
+            aDownUsed.push(iDownUsed);
+            aDownFree.push(iDownFree);
+            aUpUsed.push(iUpUsed);
+            aUpFree.push(iUpFree);
+            aYAxis.push(sPurpose); //y坐标的刻度
+        }
+    }
+    var aParaOption = {
+        'down_used': aDownUsed,
+        'down_free': aDownFree,
+        'up_used': aUpUsed,
+        'up_free': aUpFree,
+        'yaxis': aYAxis
+    };
+    return aParaOption
+}
+
+function GetOption(jDateValue, sTagID) {
+    // var aParaOption = Rate(jDateValue);
+    var aParaOption = Value(jDateValue);
     jOption = {
         color: ['#77BB77', '#d9d9d9', '#4EA8E4', '#d9d9d9'],
         tooltip: {
@@ -39,18 +85,18 @@ function GetOption(jDateValue, sTagID) {
                 type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
             }
         },
-        legend: {data: ['下载已用百分比', '下载未用百分比', '上传已用百分比', '上传未用百分比']},
+        legend: {data: ['下载已用', '下载未用', '上传已用', '上传未用']},
         xAxis: [{}],
         yAxis: [
             {
                 type: 'category',
                 axisTick: {show: false},
-                data: aYAxis
+                data: aParaOption['yaxis']
             }
         ],
         series: [
             {
-                name: '下载已用百分比',
+                name: '下载已用',
                 type: 'bar',
                 stack: '柱子A',
                 label: {
@@ -58,10 +104,10 @@ function GetOption(jDateValue, sTagID) {
                         show: true
                     }
                 },
-                data: aDownUsed
+                data: aParaOption['down_used']
             },
             {
-                name: '下载未用百分比',
+                name: '下载未用',
                 type: 'bar',
                 stack: '柱子A',
                 label: {
@@ -69,10 +115,10 @@ function GetOption(jDateValue, sTagID) {
                         show: true
                     }
                 },
-                data: aDownFree
+                data: aParaOption['down_free']
             },
             {
-                name: '上传已用百分比',
+                name: '上传已用',
                 type: 'bar',
                 stack: '柱子B',
                 label: {
@@ -80,11 +126,11 @@ function GetOption(jDateValue, sTagID) {
                         show: true
                     }
                 },
-                data: aUpUsed
+                data: aParaOption['up_used']
             }
             ,
             {
-                name: '上传未用百分比',
+                name: '上传未用',
                 type: 'bar',
                 stack: '柱子B',
                 label: {
@@ -93,7 +139,7 @@ function GetOption(jDateValue, sTagID) {
 //                        position: 'left'
                     }
                 },
-                data: aUpFree
+                data: aParaOption['up_free']
             }
         ]
     };

@@ -3,7 +3,7 @@
  */
 
 //使用滑动按钮的状态为'刷新变量'赋值
-var bSwitchTraffic = $('#toggle-traffic').prop('checked');
+
 $(function () {
     $('#toggle-traffic').change(function () {
         bSwitchTraffic = $(this).prop('checked');
