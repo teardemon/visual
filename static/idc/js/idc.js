@@ -4,12 +4,6 @@
 
 //使用滑动按钮的状态为'刷新变量'赋值
 
-$(function () {
-    $('#toggle-traffic').change(function () {
-        bSwitchTraffic = $(this).prop('checked');
-    })
-});
-
 //控制面板侧滑效果
 $("#menu-toggle").click(function (e) {
     e.preventDefault();
@@ -39,6 +33,12 @@ function IsUpdate() {
 }
 
 
+$(function () {
+    $('#toggle-traffic').change(function () {
+        bSwitchTraffic = $(this).prop('checked');
+    })
+});
+
 // 异步加载数据
 function AjaxDraw() {
     if (!IsUpdate()) {
@@ -64,7 +64,7 @@ function AjaxDraw() {
     });
 }
 
-AjaxDraw();
+
 
 
 //<li><a class="btn-floating red" id="yzs-data-button"><i class="material-icons">pause</i></a></li>

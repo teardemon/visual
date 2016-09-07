@@ -1,5 +1,16 @@
 {% extends "templates/base.html" %}
 
+{% block styles %}
+    <title>adsl,光纤流量可视化</title>
+    <link href="/static/adsl/css/adsl.css" rel="stylesheet">
+    <link href="/static/public/bootstrap/bootstrap-toggle.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/static/public/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <!--右下角的工具栏-->
+    <link type="text/css" rel="stylesheet" href="/static/idc/css/wrapper.css"/>
+{% endblock styles %}
+
+
 {% block content %}
     <div id="wrapper">
         <!-- Sidebar -->
@@ -10,14 +21,8 @@
                 </li>
             </ul>
             <ul class="sidebar-nav" id="sidebar">
-                <!--
-                需要替换掉&nbsp的写法，用标签宽度来占位置
-                -->
                 <li>
-                    <!--
-                        <a href="http://192.168.165.200:82/idc">
-                    -->
-                    <a href="http://127.0.0.1/">
+                    <a href="http://192.168.165.200:82/idc">
                         idc流量圆饼图
                         <span class="sub_icon glyphicon glyphicon-link"></span>
                     </a>
@@ -27,10 +32,6 @@
                        data-on="&nbsp;&nbsp;&nbsp;&nbsp;自动刷新数据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-play'></i>"
                        data-off="停止刷新数据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-pause'></i>">
             </ul>
-            {#            <ul class="sidebar-nav sidebar-bottom">#}
-            {#                <li><a>Link1<span class="sub_icon glyphicon glyphicon-link"></span></a></li>#}
-            {#                <li><a>Link2<span class="sub_icon glyphicon glyphicon-link"></span></a></li>#}
-            {#            </ul>#}
         </div>
 
         <!-- Page content -->
@@ -51,7 +52,7 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <div id="yzs-date">f</div>
+                <div id="yzs-date"></div>
             </div>
 
             <!-- 模态框（Modal） -->
@@ -86,65 +87,13 @@
     <!--必须先载入jquery再载入bootstrap-switch.js-->
     <script src="/static/public/bootstrap/bootstrap-toggle.js"></script>
     <!--右下角的工具栏-->
-    <script>
-        //控制面板侧滑效果
-        $("#menu-toggle").click(function (e) {
-            e.preventDefault();
-            $("#wrapper").toggleClass("active");
-        });
-    </script>
     <script src="/static/public/echarts/3.1.10/echarts.js"></script>
+    <script>var bSwitchTraffic = $('#toggle-traffic').prop('checked');</script>
+    <script src="/static/adsl/js/echarts-adsl.js"></script>
     <script src="/static/adsl/js/adsl.js"></script>
     <script type="text/javascript">
-        //根据条目设置宽度
-        function SetHeight(jData) {
-            var iLen = 1;
-            for (i in  jData['result']['data']) {
-                iLen++
-            }
-            iHeight = iLen * 120;
-            console.log(iHeight);
-            document.getElementById("main").style.height = iHeight + "px";
-        }
-
-        //显示数据更新的日期
-        function showDate(sDate) {
-            var sTip = '数据生成于：' + sDate;
-            $('#yzs-date').html(sTip);
-        }
-
-        // 基于准备好的dom，初始化echarts实例
-        function DynamicDrawChart() {
-            $.ajax({
-                // url: '/zabbix/chart/' + sZabbixIP,
-                url: '/custom/output/',
-                data: "key=adsl",// data: '{ip:' + sZabbixIP + ',line:' + sTagID + '}',
-                type: 'GET',
-                success: function (sData) {//complete() will always get called no matter if the ajax call was successful or not
-                    jData = JSON.parse(sData);
-                    SetHeight(jData);
-                    if (jData['success'] == 1) {
-                        drawChart(jData['result']['data'], 'main');
-                        showDate(jData['result']['date'])
-                    } else {
-                        console.log('后端没能给予正确的数据，提示：' + jData['tip']);
-                    }
-                }
-            })
-        }
-        DynamicDrawChart()
-    </script>
-    <script>
-            window.setInterval(DynamicDrawChart, 30000);
+        DynamicDrawChart();
+        window.setInterval(DynamicDrawChart, 30000);
     </script>
 {% endblock %}
 
-{% block styles %}
-    <title>adsl,光纤流量可视化</title>
-    <link href="/static/adsl/css/adsl.css" rel="stylesheet">
-    <link href="/static/public/bootstrap/bootstrap-toggle.css" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="/static/public/bootstrap/3.3.5/css/bootstrap.min.css"/>
-    <!--右下角的工具栏-->
-    <link type="text/css" rel="stylesheet" href="/static/idc/css/wrapper.css"/>
-{% endblock styles %}
