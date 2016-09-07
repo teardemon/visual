@@ -11,16 +11,18 @@ function GetOption(jDateValue, sTagID) {
     for (var sIP in jDateValue) {
         for (var sInterface in jDateValue[sIP]) {
             sPurpose = jDateValue[sIP][sInterface]["purpose"];
-            /*
-             * "down_total": 200,
-             "up_total": 35,
-             "down_used": 100,
-             "up_used": 10,
-             * */
             iDownUsedRate = parseFloat((jDateValue[sIP][sInterface]["down_used"] / jDateValue[sIP][sInterface]["down_total"] * 100).toFixed(0));
             iDownFreeRate = 100 - iDownUsedRate;
+            if (iDownFreeRate < 0) {
+                iDownFreeRate = 0;
+                //此处需要增加报警
+            }
             iUpUsedRate = parseFloat((jDateValue[sIP][sInterface]["up_used"] / jDateValue[sIP][sInterface]["up_total"] * 100).toFixed(0));
             iUpFreeRate = 100 - iUpUsedRate;
+            if (iUpFreeRate < 0) {
+                iUpFreeRate = 0;
+                //此处需要增加报警
+            }
             aDownUsed.push(iDownUsedRate);
             aDownFree.push(iDownFreeRate);
             aUpUsed.push(iUpUsedRate);

@@ -1,0 +1,17 @@
+body {
+    background-color: #ccffcc;
+    margin: 0px;
+    padding: 0px;
+}
+
+.yzs-alert {
+    position: fixed;
+    bottom: -20px;
+    z-index: 998;
+    margin: 0px;
+    width: 96%;
+    font-weight: bold;
+    font-size: large;
+    text-align: right; /*字体右對齊*/
+    /*color: #271b38; !*字体的颜色*!*/
+}

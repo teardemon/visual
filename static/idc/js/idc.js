@@ -1,6 +1,21 @@
 /**
  * Created by yzs on 16-8-8.
  */
+
+//使用滑动按钮的状态为'刷新变量'赋值
+var bSwitchTraffic = $('#toggle-traffic').prop('checked');
+$(function () {
+    $('#toggle-traffic').change(function () {
+        bSwitchTraffic = $(this).prop('checked');
+    })
+});
+
+//控制面板侧滑效果
+$("#menu-toggle").click(function (e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("active");
+});
+
 function tagAdd(sLine) {
     objectDom = document.getElementById(sLine);
     if (!objectDom) {
@@ -11,7 +26,7 @@ function tagAdd(sLine) {
 
 function ShowTime(sDate) {
     var sTip = '数据生成于：' + sDate;
-    $("#yzs-update-time").html(sTip);
+    $('#yzs-date').html(sTip)
 }
 
 //当按钮被关闭的时候返回不刷新数据的信号
@@ -23,12 +38,6 @@ function IsUpdate() {
     }
 }
 
-/*用途：为线路的显示顺序进行排序
- *程序-黄献波(9297) 2016-9-6 16:49:12
- *把银联联通，移动 和 香港 放机房总计前面，佛山、中山 放最前面
- * */
-function Sort(jEchartData) {
-}
 
 // 异步加载数据
 function AjaxDraw() {

@@ -47,6 +47,13 @@
                 {% endfor %}
             {% endblock notification %}
 
+            <div class="alert yzs-alert alert-info alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div id="yzs-date">f</div>
+            </div>
+
             <!-- 模态框（Modal） -->
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
                  aria-labelledby="myModalLabel" aria-hidden="true">
@@ -80,11 +87,6 @@
     <script src="/static/public/bootstrap/bootstrap-toggle.js"></script>
     <!--右下角的工具栏-->
     <script>
-        {% if not on_hook %}
-            window.setInterval(AjaxDraw, 30000);
-        {% endif %}
-    </script>
-    <script>
         //控制面板侧滑效果
         $("#menu-toggle").click(function (e) {
             e.preventDefault();
@@ -96,13 +98,19 @@
     <script type="text/javascript">
         //根据条目设置宽度
         function SetHeight(jData) {
-            var iLen = 0;
+            var iLen = 1;
             for (i in  jData['result']['data']) {
                 iLen++
             }
             iHeight = iLen * 120;
             console.log(iHeight);
             document.getElementById("main").style.height = iHeight + "px";
+        }
+
+        //显示数据更新的日期
+        function showDate(sDate) {
+            var sTip = '数据生成于：' + sDate;
+            $('#yzs-date').html(sTip);
         }
 
         // 基于准备好的dom，初始化echarts实例
@@ -117,6 +125,7 @@
                     SetHeight(jData);
                     if (jData['success'] == 1) {
                         drawChart(jData['result']['data'], 'main');
+                        showDate(jData['result']['date'])
                     } else {
                         console.log('后端没能给予正确的数据，提示：' + jData['tip']);
                     }
@@ -134,10 +143,10 @@
 
 {% block styles %}
     <title>adsl,光纤流量可视化</title>
+    <link href="/static/adsl/css/adsl.css" rel="stylesheet">
     <link href="/static/public/bootstrap/bootstrap-toggle.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="/static/public/bootstrap/3.3.5/css/bootstrap.min.css"/>
-    <link type="text/css" rel="stylesheet" href="/static/public/bootstrap/3.3.5/css/bootstrap-switch.css"/>
     <!--右下角的工具栏-->
     <link type="text/css" rel="stylesheet" href="/static/idc/css/wrapper.css"/>
 {% endblock styles %}

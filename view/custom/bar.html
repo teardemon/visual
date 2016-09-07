@@ -1,6 +1,28 @@
 {% extends "templates/base.html" %}
 
+{% block styles %}
+    <link type="text/css" rel="stylesheet" href="/static/public/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <style>
+        .yzs-alert {
+            position: fixed;
+            bottom: 0px;
+            z-index: 998;
+            margin: 0px;
+            width: 100%;
+            font-weight: bold;
+            font-size: large;
+            text-align: right; /*字体右對齊*/
+        }
+    </style>
+{% endblock styles %}
+
 {% block content %}
+    <div class="yzs-alert alert alert-success alert-dismissible fade in" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div id="yzs-date"></div>
+    </div>
     <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
     <div id="main" style="width: 100%;height:1000px;"></div>
 {% endblock content %}
@@ -12,13 +34,19 @@
     <script type="text/javascript">
         //根据条目设置宽度
         function SetHeight(jData) {
-            var iLen = 0;
+            var iLen = 1;
             for (i in  jData['result']['data']) {
                 iLen++
             }
             iHeight = iLen * 120;
             console.log(iHeight);
             document.getElementById("main").style.height = iHeight + "px";
+        }
+
+        //显示数据更新的日期
+        function showDate(sDate) {
+            var sTip = '数据生成于：' + sDate;
+            $('#yzs-date').html(sTip);
         }
 
         // 基于准备好的dom，初始化echarts实例
@@ -33,6 +61,7 @@
                     SetHeight(jData);
                     if (jData['success'] == 1) {
                         drawChart(jData['result']['data'], 'main');
+                        showDate(jData['result']['date'])
                     } else {
                         console.log('后端没能给予正确的数据，提示：' + jData['tip']);
                     }

@@ -8,14 +8,16 @@ body {
     float: left;
 }
 
-#yzs-update-time {
+.yzs-alert {
     position: fixed;
-    right: 23px;
-    bottom: 23px;
-    font-size: 25px;
-    font-weight: 600;
-    color: #271b38; /*字体的颜色*/
-    z-index: 998
+    bottom: 0px;
+    z-index: 998;
+    margin: 0px;
+    width: 96%;
+    font-weight: bold;
+    font-size: large;
+    text-align: right; /*字体右對齊*/
+    /*color: #271b38; !*字体的颜色*!*/
 }
 
 /*改变最大长宽，未达到最大长宽的时候是自适应的*/
