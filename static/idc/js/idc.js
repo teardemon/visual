@@ -24,7 +24,7 @@ function SetHeight() {
 }
 function InitTag(jEchartData) {
     var i = 0;
-    var iEachColNum = 6;//每列最大放的饼图数量
+    var iEachColNum = 12;//每列最大放的饼图数量
     for (sLine in jEchartData) {
         objectDom = document.getElementById(sLine);
         if (objectDom) {
