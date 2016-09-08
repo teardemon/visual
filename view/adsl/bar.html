@@ -2,10 +2,11 @@
 
 {% block styles %}
     <title>adsl,光纤流量可视化</title>
-    <link href="/static/adsl/css/adsl.css" rel="stylesheet">
     <link href="/static/public/bootstrap/bootstrap-toggle.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="/static/public/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <!--bootstrap.css对浏览器常用标签进行了设置，入body的编剧。所以相同的设置对象要在bootstrap之后引入才会有效-->
+    <link href="/static/adsl/css/adsl.css" rel="stylesheet">
     <!--右下角的工具栏-->
     <link type="text/css" rel="stylesheet" href="/static/idc/css/wrapper.css"/>
 {% endblock styles %}
@@ -61,7 +62,7 @@
             <!-- 模态框（Modal） -->
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
                  aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog custom-width">
+                <div class="modal-dialog yzs-modal-width">
                     <div class="modal-content">
                         <div class="modal-header yzs-modal-header">
                             <button class='yzs-button' type="button" data-dismiss="modal"
@@ -85,8 +86,7 @@
 {% block script %}
     <script src="/static/public/jquery/jquery.js"></script>
     <!--模拟框-->
-    <script src="/static/public/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="/static/public/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/static/public/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <!--必须先载入jquery再载入bootstrap-switch.js-->
     <script src="/static/public/bootstrap/bootstrap-toggle.js"></script>
     <!--右下角的工具栏-->

@@ -5,7 +5,7 @@ from idc import views
 urlpatterns = patterns('',
                        url(r'^$', views.CLineTraffic.as_view(), {'on_hook': False}, name='index'),
                        url(r'^line_traffic$', views.CLineTraffic.as_view(), {'on_hook': False}, name='index'),
-                       url(r'^on_hook/line_traffic$', views.COnHookLineTraffic.as_view(), {'on-hook': True}, name='index'),
+                       url(r'^on_hook/line_traffic$', views.COnHookLineTraffic.as_view(), {'on_hook': True}, name='index'),
 
                        url(r'^type$', views.CTypePercent, name='index'),
                        url(r'^img$', views.CImgTraffic, name='index'),

@@ -24,7 +24,7 @@ body {
 }
 
 /*这个css所使用的class是自定义的！*/
-.custom-width {
+.yzs-modal-width {
     width: 1050px; /* either % (e.g. 60%) or px (400px) */
 }
 
@@ -68,5 +68,3 @@ h3 {
     -moz-font-feature-settings: 'liga';
     -moz-osx-font-smoothing: grayscale;
 }
-
-

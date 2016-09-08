@@ -193,7 +193,36 @@ function ZabbixChart(sZabbixIP, sTagID) {
         }
     });
 }
-function SetEvent(oChart, sTagID) {
+
+function InsertModel(sTag) {
+    $(".modal-body").html(sTag);
+}
+
+function ShownModel() {
+    $("#myModal").modal('show');
+}
+
+function ZabbixChart(sIP, sInterface='', sTagID='') {
+    //sTip为图像聚焦时显示的提示框文本
+    //外环类似为：用途:CDN下载<br/>带宽:336.95 Mb/s<br/>IP:113.106.204.141<br/>占机房已用带宽百分比: 惠州电信2
+    //内环类似为:
+    var re = /\d{1,3}\.\d{1,3}.\d{1,3}.\d{1,3}/g;
+    sIP = sIP.match(re);
+    console.log(sIP, sInterface);
+    $.ajax({
+        // url: '/zabbix/chart/' + sZabbixIP,
+        url: '/zabbix/chart',
+        data: "ip=" + sIP + "&interface=" + sInterface,// data: '{ip:' + sZabbixIP + ',line:' + sTagID + '}',
+        type: 'GET',
+        success: function (jData) {
+            sTag = GetImgTag(jData);
+            InsertModel(sTag);
+            ShownModel();
+        }
+    });
+}
+
+function SetEvent(oChart, jDateValue) {
     if (!oChart) {
         return
     }
@@ -202,7 +231,7 @@ function SetEvent(oChart, sTagID) {
         for (sIP in jDateValue) {
             for (sInterface in jDateValue[sIP]) {
                 if (jDateValue[sIP][sInterface]['purpose'] == sID) {
-                    console.log('ip:' + sIP + ' interface:' + sInterface);
+                    ZabbixChart(sIP, sInterface);
                     //下一步根据graph id绘制图形
                 }
             }
@@ -213,5 +242,5 @@ function SetEvent(oChart, sTagID) {
 function drawChart(jDateValue, sTagID) {
     var jOption = GetOption(jDateValue, sTagID);
     var oChart = SetOption(jOption, sTagID);
-    SetEvent(oChart, sTagID);
+    SetEvent(oChart, jDateValue);
 }

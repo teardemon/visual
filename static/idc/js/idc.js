@@ -27,7 +27,6 @@ function InitTag(jEchartData) {
     for (sLine in jEchartData) {
         objectDom = document.getElementById(sLine);
         if (objectDom) {
-            console.log('???')
             continue
         }
         if (i % 4 == 0) {
@@ -36,7 +35,7 @@ function InitTag(jEchartData) {
             $("#drawChart-area").append(sTag);
         }
         //bootstrap栅格系统，让bootstrap设置宽度.
-        var div_new = '<div id="' + sLine + '" class="yzs-pie col-md-12 col-xs-6 col-md-3"></div>';
+        var div_new = '<div id="' + sLine + '" class="yzs-pie col-lg=2 col-md-3 col-sm-6 col-md-12"></div>';
         $("#" + iColNum).append(div_new);
         ++i;
     }

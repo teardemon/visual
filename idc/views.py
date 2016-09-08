@@ -14,7 +14,7 @@ class CLineTraffic(View):
 
 class COnHookLineTraffic(View):
     def get(self, request, *args, **kwargs):
-        return render_to_response('idc/on_hook/pie.html')
+        return render(request,'idc/pie.html', {'on_hook':'true'})
 
 
 def CImgTraffic(req):

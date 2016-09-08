@@ -14,13 +14,18 @@
     <script src="/static/idc/js/idc.js"></script>
     <script>
         AjaxDraw();
-        window.setInterval(AjaxDraw, 30000);
+        {% if not on_hook %}
+            window.setInterval(AjaxDraw, 30000);
+        {% endif %}
     </script>
 {% endblock script %}
 
 
 {% block styles %}
     <title>idc各线路流量</title>
+    {% if on_hook %}
+        <meta http-equiv="refresh" content="30"/>
+    {% endif %}
     <link href="/static/public/bootstrap/bootstrap-toggle.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="/static/public/bootstrap/3.3.5/css/bootstrap.min.css"/>
@@ -82,7 +87,7 @@
             <!-- 模态框（Modal） -->
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
                  aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog custom-width">
+                <div class="modal-dialog yzs-modal-width">
                     <div class="modal-content">
                         <div class="modal-header yzs-modal-header">
                             <button class='yzs-button' type="button" data-dismiss="modal"
