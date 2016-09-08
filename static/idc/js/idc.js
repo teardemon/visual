@@ -24,13 +24,14 @@ function SetHeight() {
 }
 function InitTag(jEchartData) {
     var i = 0;
+    var iEachColNum = 6;//每列最大放的饼图数量
     for (sLine in jEchartData) {
         objectDom = document.getElementById(sLine);
         if (objectDom) {
             continue
         }
-        if (i % 4 == 0) {
-            var iColNum = i / 4;
+        if (i % iEachColNum == 0) {
+            var iColNum = i / iEachColNum;
             sTag = '<div class="row" id=' + iColNum + '></div>';
             $("#drawChart-area").append(sTag);
         }
