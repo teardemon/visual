@@ -10,12 +10,37 @@ $("#menu-toggle").click(function (e) {
     $("#wrapper").toggleClass("active");
 });
 
-function tagAdd(sLine) {
-    objectDom = document.getElementById(sLine);
-    if (!objectDom) {
-        var div_new = '<div id="' + sLine + '" class="yzs-pie"></div>';
-        $("#drawChart-area").append(div_new);
+function GetLength(jEchartData) {
+    var i = 0;
+    for (sLine in jEchartData) {
+        ++i
     }
+    return i
+}
+
+function SetHeight() {
+    var iWidth = $('.yzs-pie').width();
+    $('.yzs-pie').height(iWidth);
+}
+function InitTag(jEchartData) {
+    var i = 0;
+    for (sLine in jEchartData) {
+        objectDom = document.getElementById(sLine);
+        if (objectDom) {
+            console.log('???')
+            continue
+        }
+        if (i % 4 == 0) {
+            var iColNum = i / 4;
+            sTag = '<div class="row" id=' + iColNum + '></div>';
+            $("#drawChart-area").append(sTag);
+        }
+        //bootstrap栅格系统，让bootstrap设置宽度.
+        var div_new = '<div id="' + sLine + '" class="yzs-pie col-md-12 col-xs-6 col-md-3"></div>';
+        $("#" + iColNum).append(div_new);
+        ++i;
+    }
+    SetHeight()
 }
 
 function ShowTime(sDate) {
@@ -56,15 +81,13 @@ function AjaxDraw() {
             sDate = jData['date'];
             ShowTime(sDate);
             // jEchartData = Sort(jEchartData);
+            InitTag(jEchartData);
             for (sLine in jEchartData) {
-                tagAdd(sLine);
                 drawChart(jEchartData[sLine], sLine, 3);
             }
         }
     });
 }
-
-
 
 
 //<li><a class="btn-floating red" id="yzs-data-button"><i class="material-icons">pause</i></a></li>
