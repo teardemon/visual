@@ -36,7 +36,7 @@ function InitTag(jEchartData) {
             $("#drawChart-area").append(sTag);
         }
         //bootstrap栅格系统，让bootstrap设置宽度.
-        var div_new = '<div id="' + sLine + '" class=""></div>';
+        var div_new = '<div id="' + sLine + '" class="'+col+'"></div>';
         $("#" + iColNum).append(div_new);
         ++i;
     }
