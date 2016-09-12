@@ -40,3 +40,11 @@ h3 {
     float: right;
     width: 50px;
 }
+
+/*圆饼图和底部数据产生时间之间的间隔效果*/
+.yzs-bottom {
+    padding: 15px;
+    margin-bottom: 40px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}

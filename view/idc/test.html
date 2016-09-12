@@ -1,23 +1,18 @@
 {% extends "templates/idc.html" %}
 
 {% block styles %}
-    <link href="/static/public/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/public/bootstrap/bootstrap-toggle.css" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/static/public/ohsnap/app.css"/>
 {% endblock styles %}
 
 {% block content %}
-    <h3>Icons/Html Text</h3>
-    <p>You can easily add icons or images since html is supported for on/off text.</p>
-    <div class="example">
-        <input type="checkbox" checked data-toggle="toggle" data-on="<i class='fa fa-play'></i> Play"
-               data-off="<i class='fa fa-pause'></i> Pause">
-    </div>
 {% endblock content %}
 
 
 {% block script %}
     <script src="/static/public/jquery/1.11.3/jquery.min.js"></script>
-    <script src="/static/public/bootstrap/3.3.5/bootstrap.min.js"></script>
-    <script src="/static/public/bootstrap/bootstrap-toggle.js"></script>
+    <script src="/static/public/ohsnap/ohsnap.js"></script>
+    <script>
+        ohSnap('ffffffffff', {'color': 'blue'});
+        ohSnap('ffffffffff', {'color': 'blue'});
+    </script>
 {% endblock script %}

@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url
 from idc import views
 
 urlpatterns = patterns('',
-                       url(r'^$', views.CLineTraffic.as_view(), {'on_hook': False}, name='index'),
+                       url(r'^$', views.CLineTraffic.as_view(), {'on_hook': False}, name='idc_index'),
                        url(r'^line_traffic$', views.CLineTraffic.as_view(), {'on_hook': False}, name='index'),
                        url(r'^on_hook/line_traffic$', views.COnHookLineTraffic.as_view(), {'on_hook': True}, name='index'),
 

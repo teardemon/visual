@@ -9,6 +9,7 @@
     <link href="/static/adsl/css/adsl.css" rel="stylesheet">
     <!--右下角的工具栏-->
     <link type="text/css" rel="stylesheet" href="/static/idc/css/wrapper.css"/>
+    <link type="text/css" rel="stylesheet" href="/static/public/ohsnap/app.css"/>
 {% endblock styles %}
 
 
@@ -22,11 +23,8 @@
                 </li>
             </ul>
             <ul class="sidebar-nav" id="sidebar">
-                <li><!--
-                    <a href="http://192.168.165.200:82/idc">
-                    -->
-                    <a href="http://127.0.0.1/idc">
-
+                <li>
+                    <a href="{% url 'idc_index' %}">
                         idc流量圆饼图
                         <span class="sub_icon glyphicon glyphicon-link"></span>
                     </a>
@@ -41,22 +39,13 @@
         <!-- Page content -->
         <div id="page-content-wrapper">
             <!-- Keep all page content within the page-content inset div! -->
-            {% block notification %}
-                {% for notification in notifications %}
-                    <div class="alert alert-warning alert-dismissible fade in" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <div id="notify">{{ notification.content }}</div>
-                    </div>
-                {% endfor %}
-            {% endblock notification %}
-
             <div class="alert yzs-alert alert-info alert-dismissible fade in" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <div id="yzs-date"></div>
+                <!--淡进淡出的提示框-->
+                <div id="ohsnap"></div>
             </div>
 
             <!-- 模态框（Modal） -->
@@ -79,6 +68,9 @@
             <div id='drawChart-area'></div>
             <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
             <div id="main" style="width: 100%;height:1000px;"></div>
+            <!--将圆饼图垫起来，高度由alert决定-->
+            <div class="yzs-bottom">
+            </div>
         </div>
     </div>
 {% endblock content %}
@@ -98,5 +90,17 @@
         DynamicDrawChart();
         window.setInterval(DynamicDrawChart, 30000);
     </script>
+    <script src="/static/public/ohsnap/ohsnap.js"></script>
+    <script>
+        //页面打开若干时间后显示提示信息
+        var iInterval = 1500;
+        $(document).ready(function () {
+            {% block notification %}
+                {% for notification in notifications %}
+                    setTimeout(ohSnap, iInterval, "{{ notification.content }}", {'color': 'blue'}, 10000);
+                    iInterval += 2000;
+                {% endfor %}
+            {% endblock notification %}
+        });
+    </script>
 {% endblock %}
-
