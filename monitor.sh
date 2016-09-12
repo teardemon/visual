@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #  作者：yzs
 #  用途：检查可视化程序是否在运行，检查可视化程序数据源是否及时更新
+#  使用方式：
 Alert(){
 wget --quiet -O /dev/null "http://im.2980.com:8088/sendmsg?key=public_server_waring&accounts=8766&content="${1} &
 }
