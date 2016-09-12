@@ -1,0 +1,21 @@
+/home/cwj/project/visual/idc/urls.py:12: RemovedInDjango110Warning: django.conf.urls.patterns() is deprecated and will be removed in Django 1.10. Update your urlpatterns to be a list of django.conf.urls.url() instances instead.
+  url(r'^test$', views.CTest.as_view(), name='index'),
+
+/home/cwj/project/visual/adsl/urls.py:6: RemovedInDjango110Warning: django.conf.urls.patterns() is deprecated and will be removed in Django 1.10. Update your urlpatterns to be a list of django.conf.urls.url() instances instead.
+  url(r'^$', CADSLTraffic.as_view(), {'on_hook': False}, name='index'),
+
+/home/cwj/project/visual/zabbix/urls.py:8: RemovedInDjango110Warning: django.conf.urls.patterns() is deprecated and will be removed in Django 1.10. Update your urlpatterns to be a list of django.conf.urls.url() instances instead.
+  url(r'^chart$', views.CChart.as_view(), {'on_hook': False}, name='index'),
+
+/home/cwj/project/visual/custom/urls.py:9: RemovedInDjango110Warning: django.conf.urls.patterns() is deprecated and will be removed in Django 1.10. Update your urlpatterns to be a list of django.conf.urls.url() instances instead.
+  url(r'^output/$', views.COutput.as_view(), name='index'),
+
+/home/cwj/project/visual/visual/urls.py:27: RemovedInDjango110Warning: django.conf.urls.patterns() is deprecated and will be removed in Django 1.10. Update your urlpatterns to be a list of django.conf.urls.url() instances instead.
+  url(r'^admin/', include(admin.site.urls)),
+
+System check identified some issues:
+
+WARNINGS:
+?: (urls.W001) Your URL pattern '^$' uses include with a regex ending with a '$'. Remove the dollar from the regex to avoid problems including URLs.
+
+System check identified 1 issue (0 silenced).
