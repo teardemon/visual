@@ -2,6 +2,9 @@
 #  作者：yzs
 #  用途：检查可视化程序是否在运行，检查可视化程序数据源是否及时更新
 #  使用方式：
+#  root权限－计划任务
+#  0 0 * * * /usr/sbin/ntpdate time.nist.gov
+#  */1 * * * * dash /home/yzs/visual/monitor.sh
 Alert(){
 wget --quiet -O /dev/null "http://im.2980.com:8088/sendmsg?key=public_server_waring&accounts=8766&content="${1} &
 }
@@ -33,3 +36,6 @@ then
     Alert "流量可视化:idc页面数据源超过60s没有刷新!"
     exit
 fi
+
+#echo "数据源的时间 "${date}
+#echo "本地时间和数据源的时间差 "${mistiming}
