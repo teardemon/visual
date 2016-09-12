@@ -10,35 +10,31 @@
     <script src="/static/public/bootstrap/bootstrap-toggle.js"></script>
     <script src="/static/public/echarts/3.1.10/echarts.js"></script>
     <script src="/static/idc/js/echarts-pie.js"></script>
-    <script>
-        //使用滑动按钮的状态为'刷新变量'赋值
-        var bSwitchTraffic = $('#toggle-traffic').prop('checked');
-        $(function () {
-            $('#toggle-traffic').change(function () {
-                bSwitchTraffic = $(this).prop('checked');
-                console.log(bSwitchTraffic);
-            })
-        })
-    </script>
-    <!--右下角的工具栏-->
+    <script>var bSwitchTraffic = $('#toggle-traffic').prop('checked');</script>
+    {% if not on_hook %}
+        <script>
+            col = "yzs-pie col-md-3"
+        </script>
+    {% else %}
+        <script>
+            col = "yzs-pie col-md-2"
+        </script>
+    {% endif %}
     <script src="/static/idc/js/idc.js"></script>
     <script>
+        AjaxDraw();
         {% if not on_hook %}
             window.setInterval(AjaxDraw, 30000);
         {% endif %}
-    </script>
-    <script>
-        //控制面板侧滑效果
-        $("#menu-toggle").click(function (e) {
-            e.preventDefault();
-            $("#wrapper").toggleClass("active");
-        });
     </script>
 {% endblock script %}
 
 
 {% block styles %}
     <title>idc各线路流量</title>
+    {% if on_hook %}
+        <meta http-equiv="refresh" content="30"/>
+    {% endif %}
     <link href="/static/public/bootstrap/bootstrap-toggle.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="/static/public/bootstrap/3.3.5/css/bootstrap.min.css"/>
@@ -63,21 +59,17 @@
                    data-on="&nbsp;&nbsp;&nbsp;&nbsp;自动刷新数据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-play'></i>"
                    data-off="停止刷新数据&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class='fa fa-pause'></i>">
             <ul class="sidebar-nav" id="sidebar">
-                <!--
-                需要替换掉&nbsp的写法，用标签宽度来占位置
-                -->
                 <li>
+                    <!--
                     <a href="http://192.168.165.200:82/adsl">
-{#                    <a href="http://127.0.0.1/adsl">#}
+                    -->
+                    <a href="http://127.0.0.1/adsl">
+
                         adsl/光纤流量图
                         <span class="sub_icon glyphicon glyphicon-link"></span>
                     </a>
                 </li>
             </ul>
-            {#            <ul class="sidebar-nav sidebar-bottom">#}
-            {#                <li><a>Link1<span class="sub_icon glyphicon glyphicon-link"></span></a></li>#}
-            {#                <li><a>Link2<span class="sub_icon glyphicon glyphicon-link"></span></a></li>#}
-            {#            </ul>#}
         </div>
 
         <!-- Page content -->
@@ -94,10 +86,17 @@
                 {% endfor %}
             {% endblock notification %}
 
+            <div class="alert yzs-alert alert-info alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div id="yzs-date"></div>
+            </div>
+
             <!-- 模态框（Modal） -->
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
                  aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog custom-width">
+                <div class="modal-dialog yzs-modal-width">
                     <div class="modal-content">
                         <div class="modal-header yzs-modal-header">
                             <button class='yzs-button' type="button" data-dismiss="modal"
@@ -110,7 +109,6 @@
                 <!-- /.modal -->
             </div>
             <!--在改区域中添加元素-->
-            <div id="yzs-update-time"></div>
             <div id='drawChart-area'></div>
             <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
         </div>

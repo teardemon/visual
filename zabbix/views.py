@@ -3,6 +3,7 @@ from django.shortcuts import HttpResponse
 from django.views.generic import View
 import re
 import json
+import ast
 from conf import *
 from opspro.public import spider
 from opspro.public import keycache
@@ -55,10 +56,17 @@ class CChart(View, spider.CSpider):
         json_info = self.ReadJson(str_api_url_zabbix)
         return json_info
 
+    def get_interface_key(self):
+        if self.m_dict_ret['interface']:
+            return 'Traffic on interface {0}'.format(self.m_dict_ret['interface'])
+        else:
+            return 'Traffic on interface eth0'
+
     def get_server_chart_url(self, list_ret):
+        str_interface_key = self.get_interface_key()
         for dict_item in list_ret:
-            if 'Traffic on interface eth0' in dict_item:
-                str_url = dict_item['Traffic on interface eth0']
+            str_url = dict_item.get(str_interface_key, None)
+            if str_url:
                 return str_url
             else:
                 str_msg_alert = '{0}通过接口查询关键字"{1}"没能在zabbix接口中获得关于zabbix流量图的url信息.可能原因:\n1.这个IP是缓存配置ip_to_interface.yaml中不存在的新交换机IP,通过删除缓存解决。\n2.这是一个配置不标准的服务器'.format(
@@ -162,12 +170,12 @@ class CChart(View, spider.CSpider):
             str_chart_info = self.m_object_key_store.key(self.m_dict_ret['line'])
         else:
             str_chart_info = self.m_object_key_store.key(self.m_dict_ret['ip'])
-        dict_chart_info = eval(str_chart_info)
+        dict_chart_info = ast.literal_eval(str_chart_info)
         json_chart_info = json.dumps(dict_chart_info)
         return json_chart_info
 
     def new_info(self):
-        json_info = self.get_info()
+        json_info = self.get_info()  # 使用强尧的查询接口查询该ip的相关信息
         str_traffic_url_demo = self.get_chart_url(json_info)  # 强尧的demo url，其中包含了图形对应的graph id
         self.get_graph_id(str_traffic_url_demo)
         self.assemble()
@@ -176,16 +184,20 @@ class CChart(View, spider.CSpider):
 
     def get(self, request, *args, **kwargs):
         self.clear()  # 清理上次执行时遗留的数据
-        if request.method == 'GET':  # and request.is_ajax():
-            self.m_dict_ret['ip'] = request.GET.get('ip')
-            self.m_dict_ret['line'] = request.GET.get('line')  # 该参数用于转换得到交换机对应的网口
-        else:
+        if not request.method == 'GET':  # and request.is_ajax():
             return HttpResponse()
+
+        if not request.GET.get('ip'):
+            return HttpResponse()
+
+        self.m_dict_ret['ip'] = request.GET.get('ip')
 
         if self.m_dict_ret['ip'] in get_switch_map():
             self.m_dict_ret['type'] = 'switch'
+            self.m_dict_ret['line'] = request.GET.get('line', None)  # 交换机的网口需要用线路信息来查找,不使用None则是null?
         else:
             self.m_dict_ret['type'] = 'host'
+            self.m_dict_ret['interface'] = request.GET.get('interface', 'eth0')  # 当前用于adsl。默认值为eth0
 
         if self.has_cache():  # 检查是否有缓存数据可用。缓存可能导致数据不更新，需要删除缓存文件以让程序重新获得数据
             json_chart_info = self.read_cache()

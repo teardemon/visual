@@ -3,19 +3,19 @@ body {
 }
 
 .yzs-pie {
-    width: 310px;
-    height: 310px;
     float: left;
 }
 
-#yzs-update-time {
+.yzs-alert {
     position: fixed;
-    right: 23px;
-    bottom: 23px;
-    font-size: 25px;
-    font-weight: 600;
-    color: #271b38; /*字体的颜色*/
-    z-index: 998
+    bottom: 0px;
+    z-index: 998;
+    margin: 0px;
+    width: 96%;
+    font-weight: bold;
+    font-size: large;
+    text-align: right; /*字体右對齊*/
+    /*color: #271b38; !*字体的颜色*!*/
 }
 
 /*改变最大长宽，未达到最大长宽的时候是自适应的*/
@@ -24,7 +24,7 @@ body {
 }
 
 /*这个css所使用的class是自定义的！*/
-.custom-width {
+.yzs-modal-width {
     width: 1050px; /* either % (e.g. 60%) or px (400px) */
 }
 
@@ -68,5 +68,3 @@ h3 {
     -moz-font-feature-settings: 'liga';
     -moz-osx-font-smoothing: grayscale;
 }
-
-

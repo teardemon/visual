@@ -1,17 +1,51 @@
 /**
  * Created by yzs on 16-8-8.
  */
-function tagAdd(sLine) {
-    objectDom = document.getElementById(sLine);
-    if (!objectDom) {
-        var div_new = '<div id="' + sLine + '" class="yzs-pie"></div>';
-        $("#drawChart-area").append(div_new);
+
+//使用滑动按钮的状态为'刷新变量'赋值
+
+//控制面板侧滑效果
+$("#menu-toggle").click(function (e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("active");
+});
+
+function GetLength(jEchartData) {
+    var i = 0;
+    for (sLine in jEchartData) {
+        ++i
     }
+    return i
+}
+
+function SetHeight() {
+    var iWidth = $('.yzs-pie').width();
+    $('.yzs-pie').height(iWidth);
+}
+function InitTag(jEchartData) {
+    var i = 0;
+    var iEachColNum = 12;//每列最大放的饼图数量
+    for (sLine in jEchartData) {
+        objectDom = document.getElementById(sLine);
+        if (objectDom) {
+            continue
+        }
+        if (i % iEachColNum == 0) {
+            var iColNum = i / iEachColNum;
+            sTag = '<div class="row" id=' + iColNum + '></div>';
+            $("#drawChart-area").append(sTag);
+        }
+        //bootstrap栅格系统，让bootstrap设置宽度.
+        var div_new = '<div id="' + sLine + '" class="'+col+'"></div>';
+        $("#" + iColNum).append(div_new);
+        ++i;
+    }
+    SetHeight()
 }
 
 function ShowTime(sDate) {
     var sTip = '数据生成于：' + sDate;
-    $("#yzs-update-time").html(sTip);
+    $('#yzs-date').html(sTip)
 }
 
 //当按钮被关闭的时候返回不刷新数据的信号
@@ -22,6 +56,13 @@ function IsUpdate() {
         return 0
     }
 }
+
+
+$(function () {
+    $('#toggle-traffic').change(function () {
+        bSwitchTraffic = $(this).prop('checked');
+    })
+});
 
 // 异步加载数据
 function AjaxDraw() {
@@ -39,17 +80,14 @@ function AjaxDraw() {
             jEchartData = jData['data'];
             sDate = jData['date'];
             ShowTime(sDate);
-            for (sServer in jEchartData) {
-                for (sLine in jEchartData[sServer]) {
-                    tagAdd(sLine);
-                    drawChart(jEchartData[sServer][sLine], sLine, 3);
-                }
+            // jEchartData = Sort(jEchartData);
+            InitTag(jEchartData);
+            for (sLine in jEchartData) {
+                drawChart(jEchartData[sLine], sLine, 3);
             }
         }
     });
 }
-
-AjaxDraw();
 
 
 //<li><a class="btn-floating red" id="yzs-data-button"><i class="material-icons">pause</i></a></li>
