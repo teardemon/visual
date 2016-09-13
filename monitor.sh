@@ -15,7 +15,10 @@ type jq || exit
 type curl || apt-get install curl -y
 type curl || exit
 
-sUrl=http://192.168.165.200:82/static/idc/cache/pie.json
+sPort="82"
+sFile="/static/idc/cache/pie.json"
+sWebsite="http://192.168.165.200:${sPort}"
+sUrl="${sWebsite}${sFile}"
 #返回带有date字段的json数据则为０
 date=`curl -s "${sUrl}"|jq '.date'`
 bSuccess=$?
@@ -24,7 +27,7 @@ bSuccess=$?
 if [ ! -z "${date}" ]
 then
     # 火星短信报警
-    Alert "流量可视化:82端口已停止！请重启django"
+    Alert "流量可视化(${sWebsite}):已停止！请重启django"
     exit
 fi
 
@@ -44,7 +47,7 @@ mistiming=`echo ${iNowTime}-${iDataTime}|bc`
 
 if [ "${mistiming}" -gt 60 ]
 then
-    Alert "流量可视化:idc页面数据源超过60s没有刷新!"
+    Alert "流量可视化(${sWebsite}):idc页面数据源超过60s没有刷新!"
     exit
 fi
 
