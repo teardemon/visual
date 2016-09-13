@@ -21,17 +21,13 @@ Start(){
 		echo '需要端口号'
 		exit 0
 	fi
-
-	tmp1=`netstat -anp|awk '{print $4}'|awk -F ':' '{print $2}'|grep -v '^$'`
-	for var in $tmp1
-	do 
-	if [ "$var" = "$num" ];then
-		echo '端口被占用'
-		exit 0
+	lsof -i:"${num}"
+	if [ "$?" -eq 0 ]
+	then
+		echo '端口'${num}'已经被占用'
+		exit
 	fi
-	done
-	echo "nohup python ${basePath}/manage.py runserver 0.0.0.0:$num &> "${basePath}/data/log/django.log" &"
-	nohup python ${basePath}/manage.py runserver 0.0.0.0:$num &> "${basePath}/data/log/django.log" &
+	nohup python ${basePath}/manage.py runserver 0.0.0.0:${num} &> "${basePath}/data/log/django.log" &
 }
 
 Status(){
