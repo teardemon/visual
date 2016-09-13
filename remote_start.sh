@@ -16,6 +16,5 @@ cmd="$2"
         expect \"Password:\" {send \"ops\n\"}
         expect \"ops@debian\" {send \"sudo dash /opt/visual/vls.sh start 83\n\"}
         expect \"password for\" {send \"ops\n\"}
-        interact
 	expect eof
 "

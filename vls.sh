@@ -25,7 +25,7 @@ Start(){
 	tmp1=`netstat -anp|awk '{print $4}'|awk -F ':' '{print $2}'|grep -v '^$'`
 	for var in $tmp1
 	do 
-	if [ $var = $num ];then
+	if [ "$var" = "$num" ];then
 		echo '端口被占用'
 		exit 0
 	fi

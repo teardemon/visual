@@ -15,13 +15,24 @@ type jq || exit
 type curl || apt-get install curl -y
 type curl || exit
 
+sUrl=http://192.168.165.200:82/static/idc/cache/pie.json
 #返回带有date字段的json数据则为０
-date=`curl -s  http://192.168.165.200:82/static/idc/cache/pie.json|jq '.date'`
+date=`curl -s "${sUrl}"|jq '.date'`
 bSuccess=$?
-if [ ! "${bSuccess=}" -eq 0 ]
+
+# date为空说明jq没有输入（服务可能没有启动）
+if [ ! -z "${date}" ]
 then
     # 火星短信报警
     Alert "流量可视化:82端口已停止！请重启django"
+    exit
+fi
+
+# bSuccess不等于0说明jq出错（返回的是django的错误debug页面,端口正常，但不能获得静态文件）
+if [ ! "${bSuccess}" -eq 0 ]
+then
+    # 火星短信报警
+    Alert "不能获得文件:"${sUrl}"无法判断页面数据源是否超时未刷新"
     exit
 fi
 
