@@ -47,7 +47,9 @@ class CInterface(View):
 
     def get_respond(self, dict_result={}, bool_success=1, str_tip=''):  # 一些语言的true必须大写开头，有的又不等于１．所以通用１
         if not isinstance(dict_result, dict):
-            raise Exception('get_respond的第一个参数必须是字典')
+            bool_success = 0
+            str_tip = 'get_respond的第一个参数必须是字典'
+            dict_result = {}
         dict_respond = {
             'result': dict_result,
             'success': bool_success,
@@ -175,5 +177,5 @@ class COutput(CInterface):
         if not str_html:
             return HttpResponse(self.m_json_respond)
         int_timeout = self.get_timeout(request)
-        print '------------------------',int_timeout
+        print '------------------------', int_timeout
         return render_to_response(str_html, {'int_setTimeout': int_timeout})
