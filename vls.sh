@@ -22,7 +22,7 @@ Start(){
 		exit 0
 	fi
 
-	tmp1=$(netstat -anp|awk '{print $4}'|awk -F ':' '{print $2}'|grep -v '^$')
+	tmp1=`netstat -anp|awk '{print $4}'|awk -F ':' '{print $2}'|grep -v '^$'`
 	for var in $tmp1
 	do 
 	if [ $var = $num ];then
@@ -30,11 +30,12 @@ Start(){
 		exit 0
 	fi
 	done
-	nohup python manage.py runserver 0.0.0.0:$num &> "${basePath}/data/log/django.log" &
+	echo "nohup python ${basePath}/manage.py runserver 0.0.0.0:$num &> "${basePath}/data/log/django.log" &"
+	nohup python ${basePath}/manage.py runserver 0.0.0.0:$num &> "${basePath}/data/log/django.log" &
 }
 
 Status(){
-	tmp2=$(ps aux|grep -e 'python.*manage.py *runserver'|awk {'print $14'}|awk -F ':' {'print $2'}|head -n 1)
+	tmp2=$(ps aux|grep -e "python.*${basePath}/manage.py *runserver"|awk {'print $14'}|awk -F ':' {'print $2'}|head -n 1)
 	if [ ! $tmp2 ];then
 		echo '服务未启动'
 		exit 0

@@ -1,3 +1,11 @@
+# 部署
+
+```
+git clone git@youzeshun.com:zeshun/visual.git
+sudo python visual/manage.py runserver 0.0.0.0:82
+```
+
+
 # 维护
 ## 页面信息不准确
 ### 图像上没有数据
