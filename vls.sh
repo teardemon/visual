@@ -21,7 +21,7 @@ Start(){
 		echo '需要端口号'
 		exit 0
 	fi
-	lsof -i:"${num}"
+	sudo lsof -i:"${num}"
 	if [ "$?" -eq 0 ]
 	then
 		echo '端口'${num}'已经被占用'
