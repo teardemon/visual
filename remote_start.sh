@@ -7,6 +7,7 @@ user='youzeshun'
 
 ip="192.168.165.200"
 cmd="$2"
+port="82"
 
 /usr/bin/expect -c "set timeout 5
         spawn  ssh -p 45222 -i ${key}  ${user}@"$ip" -o StrictHostKeyChecking=no
@@ -14,7 +15,7 @@ cmd="$2"
         expect \"${user}@debian\" {send \"${cmd}\n\"}
         expect \"${user}@debian\" {send \"su ops\n\"}
         expect \"Password:\" {send \"ops\n\"}
-        expect \"ops@debian\" {send \"sudo dash /opt/visual/vls.sh start 83\n\"}
+        expect \"ops@debian\" {send \"sudo dash /opt/visual/vls.sh start ${port}\n\"}
         expect \"password for\" {send \"ops\n\"}
-	expect eof
+    expect eof
 "

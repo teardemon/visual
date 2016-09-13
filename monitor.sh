@@ -5,6 +5,12 @@
 #  root权限－计划任务
 #  0 0 * * * /usr/sbin/ntpdate time.nist.gov
 #  */1 * * * * dash /home/yzs/visual/monitor.sh
+
+startup(){
+    basePath=$(cd `dirname $0`;pwd)
+    source ${basePath}/remote_start.sh
+}
+
 Alert(){
 wget --quiet -O /dev/null "http://im.2980.com:8088/sendmsg?key=public_server_waring&accounts=8766&content="${1} &
 }
@@ -27,6 +33,7 @@ bSuccess=$?
 if [ -z "${date}" ]
 then
     Alert "流量可视化(${sWebsite}):已停止！请重启django"
+    startup
     exit
 elif [ ! "${bSuccess}" -eq 0 ]
 then
