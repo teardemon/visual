@@ -24,17 +24,13 @@ date=`curl -s "${sUrl}"|jq '.date'`
 bSuccess=$?
 
 # date为空说明jq没有输入（服务可能没有启动）
-if [ ! -z "${date}" ]
+if [ -z "${date}" ]
 then
-    # 火星短信报警
     Alert "流量可视化(${sWebsite}):已停止！请重启django"
     exit
-fi
-
-# bSuccess不等于0说明jq出错（返回的是django的错误debug页面,端口正常，但不能获得静态文件）
-if [ ! "${bSuccess}" -eq 0 ]
+else if [ ! "${bSuccess}" -eq 0 ]
 then
-    # 火星短信报警
+    # data有值，值可能不是时间。此时jq会过滤出错，bSuccess不等于０
     Alert "不能获得文件:"${sUrl}"无法判断页面数据源是否超时未刷新"
     exit
 fi
