@@ -16,7 +16,7 @@ def Init(sLogPath, sRootPath):
     SetGlobalManager('rootpath', sRootPath)  # 脚本的根路径，用于寻找资源
     SetGlobalManager('log', rwtext.CRWText('{0}/{1}'.format(sLogPath, '/data/log')))
     SetGlobalManager("alert", alert.CAlertManager())
-    SetGlobalManager("cache", keycache.CKeyStore('{0}/{1}'.format(sLogPath, '/data/cache/top.cache')))
+    SetGlobalManager("cache", keycache.CKeyStore('{0}/{1}'.format(sLogPath, '/data/top.cache')))
 
 def IsOpen():
     SetGlobalManager("timer", timerctrl.CTimerManager())

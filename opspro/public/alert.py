@@ -99,13 +99,20 @@ class CAlertManager(object):
 
     def AlertToMany(self, AlertMsg, lstIMNumber, iInterval=TIME_REALERT):
         for IMNumber in lstIMNumber:
+            if isinstance(IMNumber, basestring):
+                IMNumber = Transcoding(IMNumber)
             self.AlertToOne(AlertMsg, IMNumber)
 
     def Alert(self, AlertMsg, IMNumber, iInterval=TIME_REALERT):
+        if isinstance(IMNumber, basestring):
+            IMNumber = Transcoding(IMNumber)
         if isinstance(IMNumber, str) or isinstance(IMNumber, int):
             self.AlertToOne(AlertMsg, IMNumber, iInterval)
-        if isinstance(IMNumber, list):
+        elif isinstance(IMNumber, list):
             self.AlertToMany(AlertMsg, IMNumber, iInterval)
+        else:
+            sMsg = 'CAlertManager.Alert 报警对象必须是字符串,数字，或者列表。不能是类型为 {0} 的内容 {1}'.format(type(IMNumber), IMNumber)
+            self.AlertToOne(sMsg, YouZeShun)
 
 
 if __name__ == '__main__':

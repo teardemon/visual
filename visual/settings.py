@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'adsl',
     'custom',
     'opspro',
+    'api',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -109,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 
 # TIME_ZONE = 'UTC'
-TIME_ZONE = 'Asia/Shanghai' #会影响到opspro中的time
+TIME_ZONE = 'Asia/Shanghai'  # 会影响到opspro中的time
 
 USE_I18N = True
 
