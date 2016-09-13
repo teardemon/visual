@@ -28,7 +28,7 @@ if [ -z "${date}" ]
 then
     Alert "流量可视化(${sWebsite}):已停止！请重启django"
     exit
-else if [ ! "${bSuccess}" -eq 0 ]
+elif [ ! "${bSuccess}" -eq 0 ]
 then
     # data有值，值可能不是时间。此时jq会过滤出错，bSuccess不等于０
     Alert "不能获得文件:"${sUrl}"无法判断页面数据源是否超时未刷新"
