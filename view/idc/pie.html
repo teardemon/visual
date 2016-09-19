@@ -40,6 +40,7 @@
             {% endblock notification %}
         });
     </script>
+    <script src="/static/public/feedback.js"></script>
 {% endblock script %}
 
 
@@ -49,11 +50,13 @@
         <meta http-equiv="refresh" content="30"/>
     {% endif %}
     <link href="/static/public/bootstrap/bootstrap-toggle.css" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/public/bootstrap/Font-Awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/public/bootstrap/Font-Awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="/static/public/bootstrap/3.3.5/css/bootstrap.min.css"/>
     <link type="text/css" rel="stylesheet" href="/static/idc/css/idc.css"/>
     <link type="text/css" rel="stylesheet" href="/static/idc/css/wrapper.css"/>
     <link type="text/css" rel="stylesheet" href="/static/public/ohsnap/app.css"/>
+    <link type="text/css" rel="stylesheet" href="/static/public/feedback.css"/>
 {% endblock styles %}
 
 
@@ -88,7 +91,9 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <div id="yzs-date"></div>
+                <!--用户反馈-->
+                <span id="yzs-feedback" class="icon-exclamation-sign icon-large"></span>
+                <span id="yzs-date"></span>
                 <!--淡进淡出的提示框-->
                 <div id="ohsnap"></div>
             </div>
@@ -101,7 +106,26 @@
                             <button class='yzs-button' type="button" data-dismiss="modal"
                                     aria-hidden="true">&times;</button>
                         </div>
-                        <div class="modal-body">img标签将取代这里</div>
+                        <div id="yzs-zabbix-img" class="modal-body">img标签将取代这里</div>
+                    </div>
+                    <!-- /.modal-content 用来把 <div> 的内容识别为模态框。-->
+                </div>
+                <!-- /.modal -->
+            </div>
+            <!--用户反馈模拟框-->
+            <div class="modal fade" id="yzs-model-feedback" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">用户反馈：</h4>
+                        </div>
+                        <textarea id="yzs-textarea" class="col-xs-12"></textarea>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                            </button>
+                            <button id="yzs-feedback-submit" type="button" class="btn btn-primary">提交</button>
+                        </div>
                     </div>
                     <!-- /.modal-content 用来把 <div> 的内容识别为模态框。-->
                 </div>

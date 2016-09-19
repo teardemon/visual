@@ -68,12 +68,11 @@ class CChart(View, spider.CSpider):
             str_url = dict_item.get(str_interface_key, None)
             if str_url:
                 return str_url
-            else:
-                str_msg_alert = '{0}通过接口查询关键字"{1}"没能在zabbix接口中获得关于zabbix流量图的url信息.可能原因:\n1.这个IP是缓存配置ip_to_interface.yaml中不存在的新交换机IP,通过删除缓存解决。\n2.这是一个配置不标准的服务器'.format(
-                    self.m_dict_ret['ip'],
-                    'Traffic on interface eth0')
-                ExecManagerFunc('log', 'Log', str_msg_alert, 'error/level2')
-                ExecManagerFunc('alert', 'Alert', str_msg_alert, [YouZeShun])
+        str_msg_alert = '{0}通过接口查询关键字"{1}"没能在zabbix接口中获得关于zabbix流量图的url信息.可能原因:\n1.这个IP是缓存配置ip_to_interface.yaml中不存在的新交换机IP,通过删除缓存解决。\n2.这是一个配置不标准的服务器'.format(
+            self.m_dict_ret['ip'],
+            'Traffic on interface eth0')
+        ExecManagerFunc('log', 'Log', str_msg_alert, 'error/level2')
+        ExecManagerFunc('alert', 'Alert', str_msg_alert, [YouZeShun])
         return ''
 
     def get_switch_chart_url(self, list_ret):

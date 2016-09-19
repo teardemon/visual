@@ -83,6 +83,7 @@ class CAlertManager(object):
         @param iInterval: 多少s内报过，则这次不报。默认１０分钟。即这次报警的内容在１０分钟内报过这次不会报警
         @return:
         '''
+        AlertMsg = Transcoding(AlertMsg)
         sIP = terminal.RunCmd('ip')
         if not isinstance(IMNumber, int) and not isinstance(IMNumber, str):
             sMsg = '{0} 方法使用错误：CAlertManager.AlertToOne(报警内容,字符串或整型的火星号).传入了错误的类型：{0},值：{1}'.format(sIP, type(IMNumber),

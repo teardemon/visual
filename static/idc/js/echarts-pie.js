@@ -265,7 +265,7 @@ function GetImgTag(jData) {
 }
 
 function InsertModel(sTag) {
-    $(".modal-body").html(sTag);
+    $("#yzs-zabbix-img").html(sTag);
 }
 
 function ShownModel() {

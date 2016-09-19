@@ -15,7 +15,9 @@ class CAlert(View):
         unicode_number = request.GET.get('number')
         if not unicode_content or not unicode_number:
             return HttpResponse('必须参数：报警内容content,报警火星号number')
-        ExecManagerFunc('alert', 'Alert', unicode_content, unicode_number)
+        str_number = Transcoding(unicode_number)
+        list_number = str_number.split(',')
+        ExecManagerFunc('alert', 'Alert', unicode_content, list_number)
         return HttpResponse()
 
 
