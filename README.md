@@ -7,6 +7,10 @@ sudo python visual/manage.py runserver 0.0.0.0:82
 
 
 # 维护
+## 增减idc节点
+1.运行　clear_cache.sh　清除缓存
+2.将节点剔除/加入排序列表　idcconfig.py的LIST_LINK_SORT
+
 ## 页面信息不准确
 ### 图像上没有数据
 可能是割接引起的交换机网口改变，需要更新线路流量和网口的映射关系。
