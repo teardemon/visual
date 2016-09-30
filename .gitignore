@@ -5,3 +5,5 @@ pie.json
 *.*~
 *.swp
 *.cache
+*.yaml
+*.db

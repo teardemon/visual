@@ -7,20 +7,21 @@
 import query
 import json
 from opspro.public.define import *
+from opspro.visualserver.idcconf import *
 
 
 def CacheQuery():
     jIDCTraff = query.GetIDCTraff()
     if not jIDCTraff:
-        # 这里需要追加报警
-        ExecManagerFunc('log', 'Log', 'IDC线路流量不允许为空', 'status/error')
-        ExecManagerFunc('alert', 'Alert', 'IDC线路流量不允许为空', [YouZeShun])
+        str_msg = 'IDC线路流量不允许为空.\n请手动核对接口数据：{0}'.format(URL_IDC_TRFF)
+        ExecManagerFunc('log', 'Log', str_msg, 'status/error')
+        ExecManagerFunc('alert', 'Alert', 'IDC线路流量不允许为空', [YouZeShun, ChenWuJie, QiangYao])
 
     jIPTop = query.GetIPTop()
     if not jIPTop:
-        # 这里需要追加报警
-        ExecManagerFunc('log', 'Log', '机房 所有 Top10流量为空，请求超时可能导致该问题', 'status/error')
-        ExecManagerFunc('alert', 'Alert', '机房 所有 Top10流量为空', [YouZeShun])
+        str_msg = '机房 所有 Top10流量为空.\n可能原因：\n1.数据端负载高，导致请求超时\n2.数据的来源异常。\n请手动核对接口数据：{0}'.format(URL_IDC_TOP)
+        ExecManagerFunc('log', 'Log', str_msg, 'status/error')
+        ExecManagerFunc('alert', 'Alert', str_msg, [YouZeShun, ChenWuJie, QiangYao])
 
     dDataEchart, dOtherUsedBand = query.GetDataEchart(jIDCTraff, jIPTop)
     dDataEchart = query.AddOuterItem(dDataEchart, dOtherUsedBand)

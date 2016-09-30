@@ -16,6 +16,7 @@ TanBin					=	6414
 CaiBoXin				=	8563
 YouZeShun				=	8766
 QiangYao				=	8838
+ChenWuJie				=	6505
 #监控报警群
 OPS_MNT					=	12672
 

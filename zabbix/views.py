@@ -72,7 +72,7 @@ class CChart(View, spider.CSpider):
             self.m_dict_ret['ip'],
             'Traffic on interface eth0')
         ExecManagerFunc('log', 'Log', str_msg_alert, 'error/level2')
-        ExecManagerFunc('alert', 'Alert', str_msg_alert, [YouZeShun])
+        ExecManagerFunc('alert', 'Alert', str_msg_alert, [YouZeShun,QiangYao,ChenWuJie])
         return ''
 
     def get_switch_chart_url(self, list_ret):
@@ -116,7 +116,7 @@ class CChart(View, spider.CSpider):
             str_error_msg = '不能获得IP为 {0} 的zabbix的graphid,因为没匹配成功。被匹配的对象: {1} 请检查该ip是否能从接口获得数据 {2}'.format(
                 self.m_dict_ret['ip'], str_traffic_url_demo, self.m_dict_ret['info'])
             ExecManagerFunc('log', 'Log', str_error_msg, 'error/level2')
-            ExecManagerFunc('alert', 'Alert', str_error_msg, [YouZeShun])
+            ExecManagerFunc('alert', 'Alert', str_error_msg, [YouZeShun,ChenWuJie,QiangYao])
             return ''
         object_ret = re.search('(?<=graphid=)\d+', str_traffic_url_demo)
         if object_ret:
@@ -125,7 +125,7 @@ class CChart(View, spider.CSpider):
             str_error_msg = '不能获得IP为 {0} 的zabbix的graphid,因为没匹配成功。被匹配的对象: {1} 请检查该ip是否能从接口获得数据 {2}：'.format(
                 self.m_dict_ret['ip'], str_traffic_url_demo, self.m_dict_ret['info'])
             ExecManagerFunc('log', 'Log', str_error_msg, 'error/level2')
-            ExecManagerFunc('alert', 'Alert', str_error_msg, [YouZeShun])
+            ExecManagerFunc('alert', 'Alert', str_error_msg, [YouZeShun,QiangYao,ChenWuJie])
 
     def assemble(self):
         str_graph_id = self.m_dict_ret['traffic']['graphid']

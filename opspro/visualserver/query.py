@@ -37,7 +37,7 @@ def GetIPTraff(sIP):
     sUrl = "%s%s" % (idcconf.URL_SERVER_INFO, sIP)
     jServerInfo = g_oSpider.ReadJson(sUrl)
     if not IsEnableFormat(jServerInfo):
-        ExecManagerFunc('alert', 'Alert', '不可用的服务器信息', YouZeShun)
+        ExecManagerFunc('alert', 'Alert', '不可用的服务器信息格式.返回的数据没有result字段或者result中没有netout', [YouZeShun, QiangYao])
         return None
     return jServerInfo
 
@@ -102,7 +102,7 @@ def getOtherUseBand(dOtherUsedBand, sServerRoom, iTotalServerUsedBand, fTopUsed)
         iOther = 0
     if iOther < -iTotalServerUsedBand * 0.1:
         sMsg = '机房流量Top10大于机房已用流量，且误差大于已用流量的10%。机房已用流量：{0}，TOp10流量：{1}'.format(iTotalServerUsedBand, int(fTopUsed))
-        ExecManagerFunc('alert', 'Alert', sMsg, YouZeShun)
+        ExecManagerFunc('alert', 'Alert', sMsg, YouZeShun, ChenWuJie, QiangYao)
     if not sServerRoom in dOtherUsedBand:
         dOtherUsedBand[sServerRoom] = {}
     dOtherUsedBand[sServerRoom]['other'] = iOther  # 除了top10使用的
@@ -232,7 +232,7 @@ def LineOrder(dDataEchart):
             sLine = Transcoding(sLine)
             if not sLine in dOrder:
                 sMsg = '线路的名称有所变化，排序列表中没有与"{0}"对应的键'.format(sLine)
-                ExecManagerFunc('alert', 'Alert', sMsg, YouZeShun)
+                ExecManagerFunc('alert', 'Alert', sMsg, YouZeShun,ChenWuJie,QiangYao)
                 ExecManagerFunc('log', 'Log', sMsg, 'error/level2')
                 continue
             dOrder[sLine] = dInfo
