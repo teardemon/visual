@@ -1,4 +1,5 @@
 # <coding:utf-8>
+# 用于后台数据的维护，不直接参与可视化
 from django.shortcuts import render_to_response
 from django.shortcuts import render
 from django.views.generic import View
