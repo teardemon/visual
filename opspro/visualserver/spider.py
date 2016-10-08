@@ -4,6 +4,7 @@
 
 import urllib2
 import json
+import socket
 
 urllib2.socket.setdefaulttimeout(10)
 
@@ -13,18 +14,18 @@ class CSpider:
     def init(self):
         pass
 
-    def ReadRespond(self, sUrl, iTimeOut=10):
+    def ReadRespond(self, sUrl):
         try:
-            oResponse = urllib2.urlopen(sUrl, iTimeOut)
+            oResponse = urllib2.urlopen(sUrl)
         except:
             sResponse = ''
         else:
             sResponse = oResponse.read()
         return sResponse
 
-    def ReadJson(self, sUrl, iTimeOut=10):
+    def ReadJson(self, sUrl):
         try:
-            oResponse = urllib2.urlopen(sUrl, iTimeOut)
+            oResponse = urllib2.urlopen(sUrl)
         except:
             dResponse = {}
         else:
@@ -40,7 +41,7 @@ if __name__ == '__main__':
 
     def demo1():
         print g_oSpider.ReadRespond('http://10.32.18.176:8088/zapi/lastvalue/?id=2&ip=121.201.102.33')
-        print g_oSpider.ReadJson('http://10.32.18.176:8088/zapi/lastvalue/?id=2&ip=121.201.102.33')
+        print g_oSpider.ReadJson('http://10.32.18.176:8088/zapi/top10/')
 
 
     def GetIPTop():
@@ -51,3 +52,6 @@ if __name__ == '__main__':
     def GetIDCTraff():
         jIDCTraff = g_oSpider.ReadJson(idcconf.URL_IDC_TRFF)
         return eval(str(jIDCTraff))
+
+
+    demo1()

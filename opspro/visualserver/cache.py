@@ -19,7 +19,7 @@ def CacheQuery():
 
     jIPTop = query.GetIPTop()
     if not jIPTop:
-        str_msg = '机房 所有 Top10流量为空.\n可能原因：\n1.数据端负载高，导致请求超时\n2.数据的来源异常。\n请手动核对接口数据：{0}'.format(URL_IDC_TOP)
+        str_msg = '机房 所有 Top10流量为空.\n可能是数据的来源异常。\n请手动核对接口数据：{0}'.format(URL_IDC_TOP)
         ExecManagerFunc('log', 'Log', str_msg, 'status/error')
         ExecManagerFunc('alert', 'Alert', str_msg, [YouZeShun, ChenWuJie, QiangYao])
 
