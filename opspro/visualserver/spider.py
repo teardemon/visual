@@ -5,24 +5,26 @@
 import urllib2
 import json
 
+urllib2.socket.setdefaulttimeout(10)
+
 
 # 返回的中文是unicode格式,print方法会自动将该格式按照当前系统的编码来转换
 class CSpider:
     def init(self):
         pass
 
-    def ReadRespond(self, sUrl):
+    def ReadRespond(self, sUrl, iTimeOut=10):
         try:
-            oResponse = urllib2.urlopen(sUrl)
+            oResponse = urllib2.urlopen(sUrl, iTimeOut)
         except:
             sResponse = ''
         else:
             sResponse = oResponse.read()
         return sResponse
 
-    def ReadJson(self, sUrl):
+    def ReadJson(self, sUrl, iTimeOut=10):
         try:
-            oResponse = urllib2.urlopen(sUrl)
+            oResponse = urllib2.urlopen(sUrl, iTimeOut)
         except:
             dResponse = {}
         else:

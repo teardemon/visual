@@ -11,11 +11,20 @@ from opspro.public.define import *
 
 g_oSpider = spider.CSpider()
 
+g_jIPTop = None
+g_Count = 0
+
 
 # 不能获得数据则报警，并且记录原因。以便处理
 def GetIPTop():
-    jIPTop = g_oSpider.ReadJson(idcconf.URL_IDC_TOP)
-    return eval(str(jIPTop))  # 先转json是为了避免中文未被编码。转dict是因为python遍历json对象有问题，目前没有定位问题。所以转为字典进行后续遍历
+    global g_Count
+    global g_jIPTop
+    if not g_jIPTop:
+        g_jIPTop = g_oSpider.ReadJson(idcconf.URL_IDC_TOP)
+    elif g_Count % 2 == 1:
+        g_jIPTop = g_oSpider.ReadJson(idcconf.URL_IDC_TOP)
+    g_Count += 1
+    return eval(str(g_jIPTop))  # 先转json是为了避免中文未被编码。转dict是因为python遍历json对象有问题，目前没有定位问题。所以转为字典进行后续遍历
 
 
 def GetIDCTraff():
