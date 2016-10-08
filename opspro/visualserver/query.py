@@ -64,7 +64,9 @@ def getServerRoomTop(sServerRoom, jIPTop):
         # print '缓存信息：', sServerRoom, jIPTop[sServerRoom]
         listServerRoomTop = jIPTop[sServerRoom]
         # print '对 {0} 进行了top10的缓存'.format(Transcoding(sServerRoom))
-        ExecManagerFunc('cache', 'store', {sServerRoom: listServerRoomTop})
+        str_error = ExecManagerFunc('cache', 'store', {sServerRoom: listServerRoomTop})
+        if str_error:
+            ExecManagerFunc('alert', 'Alert', str_error, YouZeShun, ChenWuJie)
     elif ExecManagerFunc('cache', 'has_key', sServerRoom):
         sServerRoomTop = ExecManagerFunc('cache', 'key', sServerRoom)
         listServerRoomTop = eval(sServerRoomTop)
@@ -232,7 +234,7 @@ def LineOrder(dDataEchart):
             sLine = Transcoding(sLine)
             if not sLine in dOrder:
                 sMsg = '线路的名称有所变化，排序列表中没有与"{0}"对应的键'.format(sLine)
-                ExecManagerFunc('alert', 'Alert', sMsg, YouZeShun,ChenWuJie,QiangYao)
+                ExecManagerFunc('alert', 'Alert', sMsg, YouZeShun, ChenWuJie, QiangYao)
                 ExecManagerFunc('log', 'Log', sMsg, 'error/level2')
                 continue
             dOrder[sLine] = dInfo

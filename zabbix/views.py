@@ -8,6 +8,7 @@ from conf import *
 from opspro.public import spider
 from opspro.public import keycache
 from opspro.public.define import *
+from opspro.public import terminal
 
 # 用途：传一个ip，返回两组html标签。分别为该ip的一天和七天流量记录
 # 流程：查询ip是交换机ip还是服务器ip
@@ -109,6 +110,12 @@ class CChart(View, spider.CSpider):
         elif self.m_dict_ret['type'] == 'switch':
             str_traffic_url_demo = self.get_switch_chart_url(ret)
         else:
+            str_error_msg = '不能判断IP:{0} 对应的type是\'host\'还是\'switch\'。可能是数据已更新，自动执行dash visual/clear_cache.sh。如问题未解决，请手动处理'.format(
+                self.m_dict_ret['ip'])
+            str_cmd = 'dash {0}/clear_cache.sh'.format(GetGlobalManager('rootpath'))
+            terminal.RunCmd(str_cmd)
+            ExecManagerFunc('log', 'Log', str_error_msg, 'error/level2')
+            ExecManagerFunc('alert', 'Alert', str_error_msg, [YouZeShun, ChenWuJie, QiangYao])
             str_traffic_url_demo = ''
         return str_traffic_url_demo
 

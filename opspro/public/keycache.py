@@ -53,7 +53,10 @@ class CKeyStore():
             raise Exception('keycahce.store()期待字典')
         for str_k, v in dict_cache.iteritems():
             str_k = Transcoding(str_k)
-            self.m_object_db[str_k] = str(v)
+            try:
+                self.m_object_db[str_k] = str(v)
+            except:
+                return '请检查传给keycache.store的键值：{0}是否正确'.format(str_k)
         self.close()
 
     def key(self, str_key):

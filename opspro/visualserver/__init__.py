@@ -18,11 +18,13 @@ def Init(sLogPath, sRootPath):
     SetGlobalManager("alert", alert.CAlertManager())
     SetGlobalManager("cache", keycache.CKeyStore('{0}/{1}'.format(sLogPath, '/data/top.cache')))
 
+
 def IsOpen():
     SetGlobalManager("timer", timerctrl.CTimerManager())
     if not GetGlobalManager('timer'):
         return 0
     return 1
+
 
 def Start():
     if IsOpen():
