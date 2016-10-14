@@ -35,6 +35,8 @@ class CKeyStore():
         self.close()
 
     def open(self, str_mode='w'):
+        if not self.m_path_db or not isinstance(self.m_path_db, basestring):
+            raise Exception('keycache.m_path_db 必须是一个非空字符串 而非 {0}'.format(self.m_path_db))
         if not os.path.isfile(self.m_path_db):
             str_mode = 'c'
         self.m_object_db = anydbm.open(self.m_path_db, str_mode)
@@ -56,7 +58,10 @@ class CKeyStore():
             try:
                 self.m_object_db[str_k] = str(v)
             except:
-                return '请检查传给keycache.store的键值：{0}是否正确'.format(str_k)
+                sErrorMsg = '请检查传给keycache.store的键值：{0} 是否正确 存储路径:{1}'.format(str_k, self.m_path_db)
+                print sErrorMsg
+                raise Exception(sErrorMsg)
+                return sErrorMsg
         self.close()
 
     def key(self, str_key):

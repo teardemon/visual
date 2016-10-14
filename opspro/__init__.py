@@ -9,13 +9,13 @@ import public
 import visualserver
 
 
-def Init():
-    sPathOpspro = public.path.GetCurPath(__file__, -1)
-    visualserver.Init(sPathOpspro, sPathOpspro)
+def Init(sLogPath='', sRootPath=''):
+    sLogPath = sLogPath if sLogPath else public.path.GetCurPath(__file__, -1)
+    visualserver.Init(sLogPath, sRootPath)
 
 
-def Start():
-    visualserver.Start()
+def Start(sLogPath, sRootPath):
+    visualserver.Start(sLogPath, sRootPath)
 
 
 Init()

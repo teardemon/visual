@@ -4,7 +4,6 @@
 
 import urllib2
 import json
-import socket
 
 urllib2.socket.setdefaulttimeout(10)
 
@@ -34,7 +33,7 @@ class CSpider:
 
 
 if __name__ == '__main__':
-    import idcconf
+    import vlsconf
 
     g_oSpider = CSpider()
 
@@ -45,12 +44,12 @@ if __name__ == '__main__':
 
 
     def GetIPTop():
-        jIPTop = g_oSpider.ReadJson(idcconf.URL_IDC_TOP)
+        jIPTop = g_oSpider.ReadJson(vlsconf.URL_IDC_TOP)
         return eval(str(jIPTop))  # 先转json是为了避免中文未被编码。转dict是因为python遍历json对象有问题，目前没有定位问题。所以转为字典进行后续遍历
 
 
     def GetIDCTraff():
-        jIDCTraff = g_oSpider.ReadJson(idcconf.URL_IDC_TRFF)
+        jIDCTraff = g_oSpider.ReadJson(vlsconf.URL_IDC_TRFF)
         return eval(str(jIDCTraff))
 
 

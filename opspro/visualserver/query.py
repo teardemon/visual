@@ -4,7 +4,7 @@
 # @Author  : youzeshun
 # 数据查询api,将查询到的机房实时流量数据和机房最大带宽数据进行组合
 # 有逻辑上的处理，如排序等
-import idcconf
+import vlsconf
 import spider
 import collections
 from opspro.public.define import *
@@ -20,15 +20,15 @@ def GetIPTop():
     global g_Count
     global g_jIPTop
     if not g_jIPTop:
-        g_jIPTop = g_oSpider.ReadJson(idcconf.URL_IDC_TOP)
+        g_jIPTop = g_oSpider.ReadJson(vlsconf.URL_IDC_TOP)
     elif g_Count % 2 == 1:
-        g_jIPTop = g_oSpider.ReadJson(idcconf.URL_IDC_TOP)
+        g_jIPTop = g_oSpider.ReadJson(vlsconf.URL_IDC_TOP)
     g_Count += 1
     return eval(str(g_jIPTop))  # 先转json是为了避免中文未被编码。转dict是因为python遍历json对象有问题，目前没有定位问题。所以转为字典进行后续遍历
 
 
 def GetIDCTraff():
-    jIDCTraff = g_oSpider.ReadJson(idcconf.URL_IDC_TRFF)
+    jIDCTraff = g_oSpider.ReadJson(vlsconf.URL_IDC_TRFF)
     return eval(str(jIDCTraff))
 
 
@@ -43,10 +43,10 @@ def IsEnableFormat(dData):
 
 
 def GetIPTraff(sIP):
-    sUrl = "%s%s" % (idcconf.URL_SERVER_INFO, sIP)
+    sUrl = "%s%s" % (vlsconf.URL_SERVER_INFO, sIP)
     jServerInfo = g_oSpider.ReadJson(sUrl)
     if not IsEnableFormat(jServerInfo):
-        ExecManagerFunc('alert', 'Alert', '不可用的服务器信息格式.返回的数据没有result字段或者result中没有netout', [YouZeShun, QiangYao])
+        ExecManagerFunc('alert', 'Alert', '不可用的服务器信息格式.返回的数据没有result字段或者result中没有netout', vlsconf.IM_GROUP_MAINTAIN)
         return None
     return jServerInfo
 
@@ -75,7 +75,7 @@ def getServerRoomTop(sServerRoom, jIPTop):
         # print '对 {0} 进行了top10的缓存'.format(Transcoding(sServerRoom))
         str_error = ExecManagerFunc('cache', 'store', {sServerRoom: listServerRoomTop})
         if str_error:
-            ExecManagerFunc('alert', 'Alert', str_error, YouZeShun, ChenWuJie)
+            ExecManagerFunc('alert', 'Alert', str_error, vlsconf.IM_GROUP_DEVELOPER)
     elif ExecManagerFunc('cache', 'has_key', sServerRoom):
         sServerRoomTop = ExecManagerFunc('cache', 'key', sServerRoom)
         listServerRoomTop = eval(sServerRoomTop)
@@ -226,7 +226,7 @@ def InitDict():
     @return:
     '''
     dTmp = collections.OrderedDict()
-    for sLine in idcconf.LIST_LINE_SORT:
+    for sLine in vlsconf.LIST_LINE_SORT:
         dTmp[sLine] = {}
     return dTmp
 

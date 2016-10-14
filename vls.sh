@@ -2,8 +2,7 @@
 #Created on 2016-9-5
 #@author: cwj
 #用途：
-#	启动关闭Django服务
-
+#1.启动/关闭Django服务和opspro的数据更新程序
 
 Stop(){
 
@@ -13,7 +12,19 @@ Stop(){
 		echo '需要端口号'
 		exit 0
 	fi
-	ps aux|grep -e 'python.*manage.py *runserver'.*$num|awk '{print $2}'|xargs sudo kill
+	ps aux|grep -e 'python.*manage.py *runserver'.*$num|grep -v ' grep '|awk '{print $2}'|xargs  kill &>/dev/null
+	if [ $? = 0 ];then
+		echo '成功终止:django'
+	else
+		echo '终止程序失败django'
+	fi
+
+	ps -ef|grep ${basePath}/startup.py|grep -v ' grep '|awk '{print $2}'|xargs kill &>/dev/null
+	if [ $? = 0 ];then
+		echo '成功终止:'${basePath}/startup.py
+	else
+		echo '终止程序失败:'${basePath}/startup.py
+	fi
 }
 
 Start(){
@@ -27,7 +38,11 @@ Start(){
 		echo '端口'${num}'已经被占用'
 		exit
 	fi
-	nohup python ${basePath}/manage.py runserver 0.0.0.0:${num} &> "${basePath}/data/log/django.log" &
+
+	# 启动  数据更新程序
+	python ${basePath}/startup.py --logpath=${basePath}/data/log/opspro/ --rootpath=${basePath} &>/dev/null &
+	# 启动  django
+	nohup python ${basePath}/manage.py runserver 0.0.0.0:${num} &
 }
 
 Status(){

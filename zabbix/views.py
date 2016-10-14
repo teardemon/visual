@@ -9,6 +9,7 @@ from opspro.public import spider
 from opspro.public import keycache
 from opspro.public.define import *
 from opspro.public import terminal
+from opspro.visualserver import vlsconf
 
 # 用途：传一个ip，返回两组html标签。分别为该ip的一天和七天流量记录
 # 流程：查询ip是交换机ip还是服务器ip
@@ -80,7 +81,7 @@ class CChart(View, spider.CSpider):
         str_cmd = 'dash {0}/clear_cache.sh'.format(GetGlobalManager('rootpath'))
         terminal.RunCmd(str_cmd)
         ExecManagerFunc('log', 'Log', str_msg_alert, 'error/level2')
-        ExecManagerFunc('alert', 'Alert', str_msg_alert, [YouZeShun, QiangYao, ChenWuJie])
+        ExecManagerFunc('alert', 'Alert', str_msg_alert, vlsconf.IM_GROUP_MAINTAIN)
         return ''
 
     def get_switch_chart_url(self, list_ret):
@@ -117,7 +118,7 @@ class CChart(View, spider.CSpider):
             str_cmd = 'dash {0}/clear_cache.sh'.format(GetGlobalManager('rootpath'))
             terminal.RunCmd(str_cmd)
             ExecManagerFunc('log', 'Log', str_error_msg, 'error/level2')
-            ExecManagerFunc('alert', 'Alert', str_error_msg, [YouZeShun, ChenWuJie, QiangYao])
+            ExecManagerFunc('alert', 'Alert', str_error_msg, vlsconf.IM_GROUP_MAINTAIN)
             str_traffic_url_demo = ''
         return str_traffic_url_demo
 
@@ -130,7 +131,7 @@ class CChart(View, spider.CSpider):
             str_error_msg = '不能获得IP:{0} 查询zabbix的graph_id.请检查接口{1}。'.format(
                 self.m_dict_ret['ip'], self.m_zabbix_chart_full.format(self.m_dict_ret['ip'], self.m_dict_ret['type']))
             ExecManagerFunc('log', 'Log', str_error_msg, 'error/level2')
-            ExecManagerFunc('alert', 'Alert', str_error_msg, [YouZeShun, ChenWuJie, QiangYao])
+            ExecManagerFunc('alert', 'Alert', str_error_msg, vlsconf.IM_GROUP_MAINTAIN)
             return ''
         object_ret = re.search('(?<=graphid=)\d+', str_traffic_url_demo)
         if object_ret:
@@ -139,7 +140,7 @@ class CChart(View, spider.CSpider):
             str_error_msg = '不能获得IP:{0} 的zabbix的graphid,因为从{0}中没匹配到\'graphid=\'.请检查该ip是否能从接口获得数据 {2}：'.format(
                 self.m_dict_ret['ip'], str_traffic_url_demo, self.m_dict_ret['info'])
             ExecManagerFunc('log', 'Log', str_error_msg, 'error/level2')
-            ExecManagerFunc('alert', 'Alert', str_error_msg, [YouZeShun, QiangYao, ChenWuJie])
+            ExecManagerFunc('alert', 'Alert', str_error_msg, vlsconf.IM_GROUP_MAINTAIN)
 
     def assemble(self):
         str_graph_id = self.m_dict_ret['traffic']['graphid']
