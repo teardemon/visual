@@ -14,5 +14,5 @@
   武汉银联联通: !!python/unicode 'GigabitEthernet0/3'}
 !!python/unicode '218.213.229.66': {香港: !!python/unicode 'GigabitEthernet1/0/24'}
 !!python/unicode '219.132.195.1': {佛山电信: !!python/unicode 'TenGigabitEthernet1/1',
-  佛山联通: !!python/unicode 'TenGigabitEthernet1/3'}
+  佛山联通: !!python/unicode 'TenGigabitEthernet1/4'}
 !!python/unicode '222.211.64.194': {成都电信: !!python/unicode 'GigabitEthernet1/0/1'}
