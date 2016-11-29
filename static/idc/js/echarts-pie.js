@@ -237,7 +237,19 @@ function GetOption(jDataValue, sTagID, Theme) {
     return jOption
 }
 
+var AOption = new Array();
+function ClearOption(sTagID, myChart) {
+    // myChart.dispose()
+    // myChart.clear()
+    iIndex = $.inArray(sTagID, AOption);
+    if (sTagID in AOption) {
+        AOption[sTagID].clear();
+        AOption[sTagID].dispose();
+    }
+}
+
 function SetOption(jOption, sTagID) {
+    ClearOption(sTagID);
     objectDom = document.getElementById(sTagID);
     if (objectDom) {
         // 基于准备好的dom，初始化echarts实例
@@ -247,6 +259,7 @@ function SetOption(jOption, sTagID) {
     }
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(jOption);
+    AOption[sTagID] = myChart;
     return myChart
 }
 
