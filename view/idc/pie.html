@@ -11,21 +11,13 @@
     <script src="/static/public/echarts/3.1.10/echarts.js"></script>
     <script src="/static/idc/js/echarts-pie.js"></script>
     <script>var bSwitchTraffic = $('#toggle-traffic').prop('checked');</script>
-    {% if not on_hook %}
-        <script>
-            col = "yzs-pie col-md-3"
-        </script>
-    {% else %}
-        <script>
-            col = "yzs-pie col-md-2"
-        </script>
-    {% endif %}
+    <script>
+        col = "yzs-pie col-md-3"
+    </script>
     <script src="/static/idc/js/idc.js"></script>
     <script>
         AjaxDraw();
-        {% if not on_hook %}
-            window.setInterval(AjaxDraw, 30000);
-        {% endif %}
+        window.setInterval(AjaxDraw, 30000);
     </script>
     <script src="/static/public/ohsnap/ohsnap.js"></script>
     <script>
@@ -46,9 +38,6 @@
 
 {% block styles %}
     <title>idc各线路流量</title>
-    {% if on_hook %}
-        <meta http-equiv="refresh" content="30"/>
-    {% endif %}
     <link href="/static/public/bootstrap/bootstrap-toggle.css" rel="stylesheet">
     <link href="/static/public/bootstrap/Font-Awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/public/bootstrap/Font-Awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
