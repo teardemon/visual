@@ -11,9 +11,15 @@
     <script src="/static/public/echarts/3.1.10/echarts.js"></script>
     <script src="/static/idc/js/echarts-pie.js"></script>
     <script>var bSwitchTraffic = $('#toggle-traffic').prop('checked');</script>
-    <script>
-        col = "yzs-pie col-md-3"
-    </script>
+    {% if not on_hook %}
+        <script>
+            col = "yzs-pie col-md-3"
+        </script>
+    {% else %}
+        <script>
+            col = "yzs-pie col-md-2"
+        </script>
+    {% endif %}
     <script src="/static/idc/js/idc.js"></script>
     <script>
         AjaxDraw();
