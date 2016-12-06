@@ -5,11 +5,8 @@ from idc import views
 urlpatterns = patterns('',
                        url(r'^$', views.CLineTraffic.as_view(), {'on_hook': False}, name='idc_index'),
                        url(r'^line_traffic$', views.CLineTraffic.as_view(), {'on_hook': False}, name='index'),
-<<<<<<< HEAD
                        url(r'^on_hook/line_traffic$', views.COnHookLineTraffic.as_view(), {'on_hook': True},
                            name='index'),
-=======
->>>>>>> 740d16dca809399547f036c8e5da83ab523e66c8
                        url(r'^type$', views.CTypePercent, name='index'),
                        url(r'^img$', views.CImgTraffic, name='index'),
                        url(r'^test$', views.CTest.as_view(), name='index'),
