@@ -7,6 +7,12 @@ sudo python visual/manage.py runserver 0.0.0.0:82
 
 
 # 维护
+
+## 割接引起
+
+点击图形弹出zabbix图形的功能需要idc机房的ip和网口信息。该信息使用链接“http://10.32.64.64:8000/info/getidc/”。维护者为强尧。注意：当机房信息不准后，除了通知链接维护者修改外，还需要在修改完链接后，手动删除链接信息的缓存。（clear_cache.sh）
+
+
 ## 增减idc节点
 1.运行　clear_cache.sh　清除缓存
 2.将节点剔除/加入排序列表　idcconfig.py的LIST_LINK_SORT
